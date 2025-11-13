@@ -1,0 +1,172 @@
+/* 전체 레이아웃 */
+.Login {
+    width: 100%;
+    max-width: 520px;
+    margin: 60px auto 80px;
+    padding: 0 24px;
+    box-sizing: border-box;
+}
+
+/* 상단 로고 박스 */
+.logo {
+    width: 100%;
+    height: 64px;
+    background: #5f4634; /* 갈색 */
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 24px;
+    border-radius: 2px;
+    margin-bottom: 56px;
+}
+
+/* 폼 영역 */
+.form {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+}
+
+.field {
+    position: relative;
+    display: flex;
+    align-items: center;
+    min-height: 68px;
+}
+
+.input {
+    width: 100%;
+    font-size: 18px;
+    padding: 22px 4px 10px;
+    outline: none;
+    border: none;
+    background: transparent;
+    box-sizing: border-box;
+}
+
+.underline {
+    border-bottom: 3px solid #000;
+    transition: border-color 0.2s ease;
+}
+
+.field:focus-within.underline {
+    border-bottom-color: #5f4634;
+}
+
+.fieldLabel {
+    position: absolute;
+    left: 4px;
+    top: 28px;
+    font-size: 18px;
+    font-weight: 600;
+    color: #555;
+    transform-origin: left top;
+    transition: all 0.18s ease-in-out;
+    pointer-events: none;
+}
+
+.field input:focus ~ .fieldLabel,
+.field input:not(:placeholder-shown) ~ .fieldLabel {
+    top: 6px;
+    font-size: 12px;
+    color: #5f4634;
+}
+
+.passwordField .input {
+    padding-right: 52px;
+}
+
+.eyeBtn {
+    position: absolute;
+    right: 6px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 32px;
+    height: 32px;
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    color: #000;
+}
+
+/* 링크들 */
+.links {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: #888;
+    margin-top: 6px;
+}
+
+.links button {
+    border: none;
+    background: transparent;
+    color: #888;
+    font-size: 14px;
+    cursor: pointer;
+}
+
+.links .dot {
+    color: #bbb;
+}
+
+/* 구분선 */
+.divider {
+    margin: 36px 0 28px;
+    border: none;
+    border-top: 2px solid #bbb;
+}
+
+/* 소셜 로그인 */
+.socialRow {
+    display: flex;
+    justify-content: center;
+    gap: 36px;
+}
+
+.social {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    border: none;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+}
+
+.social .emoji {
+    font-weight: 800;
+    font-size: 28px;
+}
+
+.social.kakao {
+    background: #fae300;
+    color: #391b1b;
+}
+
+.social.google {
+    background: #ffffff;
+    color: #1967d2;
+    border: 1px solid #e6e6e6;
+}
+
+.social.naver {
+    background: #03c75a;
+    color: #ffffff;
+}
+
+/* 반응형 소폭 조정 */
+@media (max-width: 420px) {
+    .logo {
+        height: 56px;
+        font-size: 20px;
+    }
+    .social {
+        width: 68px;
+        height: 68px;
+    }
+}
