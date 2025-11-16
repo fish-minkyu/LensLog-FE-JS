@@ -1,0 +1,130 @@
+.Login {
+    max-width: 620px; /* 컨테이너 최대 너비 설정 */
+    box-sizing: border-box; /* max-width가 패딩과 보더를 포함한 전체 박스 너비 */
+    margin: 200px auto; /* 중앙 정렬 및 상단 여백 */
+    padding: 20px;
+    border-radius: 12px;
+    background-color: #fff;
+    text-align: center;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.login-form {
+    max-width: 400px; /* 로그인 버튼 너비와 일치시키기 위해 명시적으로 너비 설정 */
+    margin: 0 auto; /* 중앙 정렬 */
+}
+
+.login-form .input-group {
+    position: relative;
+    margin-bottom: 24px;
+    width: 100%;
+}
+
+.login-form .input-group input {
+    width: 100%;
+    padding: 12px 36px 8px 8px; /* 아이콘이 들어갈 공간 (오른쪽 패딩 36px) */
+    border: none;
+    border-bottom: 2px solid black;
+    outline: none;
+    font-size: 16px;
+    box-sizing: border-box;
+}
+
+.login-form .input-group label {
+    position: absolute;
+    left: 8px;
+    top: 12px;
+    color: #909090;
+    font-size: 16px;
+    pointer-events: none;
+    transition: all 0.2s ease;
+}
+
+.login-form .password-visible-icon {
+    position: absolute;
+    right: 8px;
+    top: 50%;
+    transform: translateY(-50%);
+    cursor: pointer;
+    width: 24px;
+    height: 24px;
+    z-index: 10; /* 입력 필드 위에 표시 */
+    opacity: 0.7; /* 살짝 투명하게 하여 UI 요소처럼 보이게 함 */
+}
+
+/* 입력한 포커스 혹은 내용이 있을 때 */
+.input-group input:focus + label,
+.input-group input:not(:placeholder-shown) + label {
+    top: -8px;
+    font-size: 12px;
+    color: black;
+    font-weight: 600;
+    background-color: #fff;
+    padding: 0 4px;
+}
+
+.login-form .input {
+    border: none;
+    border-bottom: 2px solid black;
+}
+
+.login-form .link-button {
+    text-align: left;
+    width: 100%; /* 로그인 버튼과 너비 같게 */
+    margin-top: 8px;
+}
+
+.login-form .error-message {
+    color: red;
+    font-size: 14px;
+    margin-top: -20px;
+    margin-bottom: 12px;
+    text-align: left;
+}
+
+.link-button a,
+.link-button a:visited,
+.link-button a:active,
+.link-button a:hover {
+    color: #909090;
+    text-decoration: none; /* 필요에 따라 밑줄 제거 */
+    cursor: pointer;
+    user-select: none; /* 선택 방지로 깔끔한 UX 가능 */
+}
+
+.link-button .separator {
+    color: #909090;
+    margin: 0 4px;
+    user-select: none;
+}
+
+.underline {
+    border: none; /* 기본 보더 제거 */
+    width: 500px;
+    border-top: 2px solid black; /* 얇은 상단 보더로 구분선 역할 */
+    margin: 30px auto; /* 위아래 여백 */
+}
+
+.social-login {
+    margin-top: 20px;
+
+    display: flex;
+    justify-content: center; /* 버튼들을 가운데 정렬 */
+    gap: 20px;
+}
+
+.social-login .social-button {
+    border: none;
+    background-color: white;
+    cursor: pointer;
+
+    display: flex;
+    justify-content: center; /* 가운데 정렬 */
+    align-items: center;
+}
+
+.social-login .social-button > img {
+    width: 80%;
+    border-radius: 50%;
+    object-fit: contain; /* 이미지 비율 유지하며 버튼 내부에 포함 */
+}

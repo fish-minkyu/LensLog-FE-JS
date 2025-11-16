@@ -1,0 +1,12 @@
+.Button {
+    border: none;
+}
+
+.Button_LOGIN {
+    background-color: black;
+    border-radius: 5px;
+    color: white;
+    width: 400px;
+    height: 50px;
+    font-size: 24px;
+}
