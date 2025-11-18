@@ -10,6 +10,7 @@ import eyeOpen from "../assets/open-eye.svg";
 import eyeClosed from "../assets/closed-eye.svg";
 import Header from "../components/Header";
 import logoImage from "../assets/logo.svg";
+import { useAuth } from "../context/AuthContext";
 
 const Login = () => {
     const [username, setUsername] = useState(""); // password
@@ -17,6 +18,7 @@ const Login = () => {
     const [passwordVisible, setPasswordVisible] = useState(false);
     const [errorMessage, setErrorMessage] = useState("");
     const nav = useNavigate();
+    const { login } = useAuth();
 
     // 1. 이메일 입력 필드의 값이 변경될 때 호출될 핸들러
     const handleUsernameChange = (e) => {
@@ -48,6 +50,9 @@ const Login = () => {
             );
 
             if (response.status === 200) {
+                const userData = response.data;
+                login(userData);
+
                 nav("/", { replace: true });
             }
         } catch (error) {

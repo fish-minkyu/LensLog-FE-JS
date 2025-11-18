@@ -1,0 +1,22 @@
+.Category {
+    margin: 20px 0;
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap; /* 버튼이 넘치면 줄바꿈 */
+}
+
+.Category .category-button {
+    background-color: #6b4f4f;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    cursor: pointer;
+    border-radius: 20px;
+    font-weight: 600;
+    font-size: 0.9rem;
+    transition: background-color 0.3s ease;
+}
+
+.category-button:hover {
+    background-color: #a67c7c;
+}
