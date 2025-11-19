@@ -3,7 +3,7 @@ import { Routes, Route } from "react-router-dom";
 import { AuthProvider } from "./context/AuthContext";
 import Home from "./pages/Home";
 import Login from "./pages/Login";
-import Detail from "./pages/\bDetail";
+import Detail from "./pages/Detail";
 import OAuth2RedircectHandler from "./components/OAuth2RedirectHandler";
 
 function App() {
