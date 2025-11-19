@@ -14,7 +14,7 @@ const Home = () => {
             <div className="body-container">
                 <Category />
                 <Scroll />
-            </div>
+            </div> 
         </div>
     );
 };

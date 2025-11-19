@@ -78,7 +78,7 @@
 }
 
 .download-button:hover {
-    background-color: #c21e1e;
+    background-color: #fc000c;
 }
 
 .like-button {
@@ -178,7 +178,7 @@
 
 .download-button.landscape {
     top: 48px;
-    right: 0px;
+    right: -2px;
     margin-right: 6px;
 }
 

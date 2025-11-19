@@ -27,7 +27,12 @@ const Detail = () => {
                 const response = await axios.get(
                     `http://localhost:8080/api/photo/getOne/${photoId}`
                 );
+
                 setPhoto(response.data);
+
+                if (response.data && response.data.isLiked !== undefined) {
+                    setLiked(response.data.isLiked);
+                }
             } catch (error) {
                 console.error("사진을 가지고 올 수 없습니다.", error);
                 setError("사진을 가지고 올 수 없습니다.");
@@ -49,8 +54,13 @@ const Detail = () => {
     };
 
     // 좋아요 토글 함수
-    const toggleLike = () => {
-        setLiked((prev) => !prev);
+    const toggleLike = async () => {
+        try {
+            await axios.post(`http://localhost:8080/api/good/${photoId}`);
+            setLiked((prev) => !prev);
+        } catch (error) {
+            console.error("좋아요가 오류 났습니다.", error);
+        }
     };
 
     if (loading) return <div>로딩 중...</div>;
