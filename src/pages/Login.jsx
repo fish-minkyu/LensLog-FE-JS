@@ -20,6 +20,10 @@ const Login = () => {
     const nav = useNavigate();
     const { login } = useAuth();
 
+    const handleLogoClick = () => {
+        nav("/");
+    };
+
     // 1. 이메일 입력 필드의 값이 변경될 때 호출될 핸들러
     const handleUsernameChange = (e) => {
         setUsername(e.target.value);
@@ -84,10 +88,11 @@ const Login = () => {
 
     return (
         <div className="Login">
-            <Header
-                centerChild={
-                    <img className="logo-image" src={logoImage} alt="logo" />
-                }
+            <img
+                className="logo-image"
+                src={logoImage}
+                alt="logo"
+                onClick={handleLogoClick}
             />
             <div className="login-form">
                 <div className="input-group">

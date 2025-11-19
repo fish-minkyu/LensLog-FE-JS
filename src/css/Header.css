@@ -19,10 +19,6 @@
     justify-content: flex-start; /* 왼쪽 정렬 */
 }
 
-.Header .center-child {
-    justify-content: center; /* 중앙 정렬 */
-}
-
 .Header .right-child {
     justify-content: flex-end; /* 오른쪽 정렬 */
 }

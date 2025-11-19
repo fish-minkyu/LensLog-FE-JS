@@ -12,7 +12,7 @@ function App() {
             <Routes>
                 <Route path="/" element={<Home />} />
                 <Route path="/login" element={<Login />} />
-                <Route path="/detail/:id" element={<Detail />} />
+                <Route path="/detail/:photoId" element={<Detail />} />
                 <Route
                     path="/oauth2/callback"
                     element={<OAuth2RedircectHandler />}
