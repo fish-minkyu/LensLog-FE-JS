@@ -33,20 +33,9 @@
     padding: 48px 56px;
     display: flex;
     gap: 40px;
-    width: min(1080px, 100%);
+    max-width: 1280px;
     background: #ffffff;
     box-sizing: border-box;
-}
-
-.detail-container.pending,
-.detail-container.landscape {
-    flex-direction: row;
-    align-items: center;
-}
-
-.detail-container.portrait {
-    flex-direction: column;
-    align-items: center;
 }
 
 .photo-wrapper {
@@ -56,20 +45,11 @@
     align-items: center;
 }
 
-.detail-container.landscape .photo-wrapper {
-    max-width: 560px;
-}
-
-.detail-container.portrait .photo-wrapper {
-    width: 100%;
-    max-width: 520px;
-}
-
 .photo {
     width: 100%;
     height: auto;
     max-height: 640px;
-    border-radius: 20px;
+    border-radius: 10px;
     object-fit: contain;
 }
 
@@ -80,16 +60,6 @@
     justify-content: flex-end;
     gap: 20px;
     align-items: flex-start;
-}
-
-.detail-container.landscape .photo-info {
-    align-self: flex-end;
-}
-
-.detail-container.portrait .photo-info {
-    width: 100%;
-    align-items: flex-end;
-    margin-top: 32px;
 }
 
 .download-button {
@@ -124,10 +94,6 @@
     padding: 0;
 }
 
-.detail-container.portrait .like-button {
-    align-self: flex-end;
-}
-
 .heart-icon {
     width: 32px;
     height: 32px;
@@ -150,10 +116,6 @@
     box-sizing: border-box;
 }
 
-.detail-container.portrait .photo-details {
-    max-width: 420px;
-}
-
 .detail-item {
     flex: 1;
     display: flex;
@@ -172,6 +134,74 @@
     font-size: 16px;
     font-weight: 600;
     color: #111111;
+}
+
+/* Portrait layout ------------------------------------------------------- */
+.detail-container.pending,
+.detail-container.portrait {
+    flex-direction: row;
+    align-items: center;
+}
+
+.detail-container.portrait .photo-wrapper {
+    max-width: 560px;
+}
+
+.detail-container.portrait .photo-info {
+    align-self: flex-end;
+}
+
+/* Landscape layout ------------------------------------------------------ */
+.detail-container.landscape {
+    flex-direction: column;
+    align-items: center;
+    max-width: 1280px;
+    width: 100%;
+    padding-right: 80px;
+}
+
+.detail-container.landscape .photo-wrapper {
+    width: 100%;
+    max-width: 1260px;
+}
+
+.detail-container.landscape .photo-info {
+    width: 100%;
+    max-width: 1260px;
+    align-self: center;
+    flex-direction: row;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 24px;
+    margin-top: 24px;
+}
+
+.download-button.landscape {
+    top: 48px;
+    right: 0px;
+    margin-right: 6px;
+}
+
+.detail-container.landscape .like-button {
+    margin-bottom: 6px;
+    align-self: flex-start;
+}
+
+.detail-container.landscape .photo-details {
+    width: auto;
+    max-width: 500px;
+    align-self: flex-end;
+    margin-left: auto;
+}
+
+.detail-container.landscape .detail-item {
+    padding: 16px 40px;
+}
+
+.detail-container.landscape .detail-label,
+.detail-container.landscape .detail-value {
+    width: 50px;
+    text-align: center;
 }
 
 @media (max-width: 900px) {

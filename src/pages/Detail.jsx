@@ -41,7 +41,7 @@ const Detail = () => {
     // 이미지 로드 후 사이즈 검사 함수
     const handleImageLoad = (e) => {
         const { naturalWidth, naturalHeight } = e.target;
-        setIsPortrait(naturalHeight > naturalWidth);
+        setIsPortrait(naturalHeight >= naturalWidth);
     };
 
     // 좋아요 토글 함수
@@ -54,7 +54,7 @@ const Detail = () => {
     if (!photo) return null;
 
     const orientationClass =
-        isPortrait === null ? "pending" : isPortrait ? "landscape" : "portrait";
+        isPortrait === null ? "pending" : isPortrait ? "portrait" : "landscape";
 
     return (
         <div className="Detail">
@@ -68,7 +68,10 @@ const Detail = () => {
                     <img src={leftArrow} alt="뒤로가기" />
                 </button>
                 <div className={`detail-container ${orientationClass}`}>
-                    <button className="download-button" type="button">
+                    <button
+                        className={`download-button ${orientationClass}`}
+                        type="button"
+                    >
                         저장
                     </button>
 
