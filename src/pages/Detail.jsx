@@ -63,6 +63,42 @@ const Detail = () => {
         }
     };
 
+    // 다운로드
+    const handleImageDownload = async () => {
+        try {
+            const response = await axios.get(
+                `http://localhost:8080/api/photo/download/${photoId}`,
+                { responseType: "blob" }
+            );
+
+            // 서버가 보내준 헤더에서 파일명 추출 (없으면 기본명 사용)
+            const filename = response.headers["content-disposition"]
+                ? decodeURIComponent(
+                      response.headers["content-disposition"]
+                          .split("filename=")[1]
+                          .replace(/\"/g, "")
+                  )
+                : `${photoId}.jpg`;
+
+            // Blob -> URL 생성
+            const url = window.URL.createObjectURL(new Blob([response.data]));
+
+            // 임시 a 태그 생성하여 클릭
+            const link = document.createElement("a");
+            link.href = url;
+            link.setAttribute("download", filename);
+            document.body.appendChild(link);
+            link.click();
+
+            // 정리
+            link.parentNode.removeChild(link);
+            window.URL.revokeObjectURL(url);
+        } catch (error) {
+            console.error("이미지 다운로드 중 오류 발생:", error);
+            alert("다운로드에 실패했습니다.");
+        }
+    };
+
     if (loading) return <div>로딩 중...</div>;
     if (error) return <div>{error}</div>;
     if (!photo) return null;
@@ -96,6 +132,7 @@ const Detail = () => {
                     <button
                         className={`download-button ${orientationClass}`}
                         type="button"
+                        onClick={handleImageDownload}
                     >
                         저장
                     </button>
@@ -121,8 +158,8 @@ const Detail = () => {
                                 alt={liked ? "좋아요 취소" : "좋아요"}
                                 className="heart-icon"
                             />
-                            <span>
-                                {liked ? photo.likeCount + 1 : photo.likeCount}
+                            <span className="like-count">
+                                {photo.likeCount}
                             </span>
                         </button>
 
