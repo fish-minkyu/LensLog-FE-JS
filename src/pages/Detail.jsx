@@ -15,6 +15,7 @@ const Detail = () => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [isPortrait, setIsPortrait] = useState(null); // true = 세로, false = 가로
+    const [imageAspect, setImageAspect] = useState(null); // width / height
     const [liked, setLiked] = useState(false);
 
     useEffect(() => {
@@ -42,6 +43,9 @@ const Detail = () => {
     const handleImageLoad = (e) => {
         const { naturalWidth, naturalHeight } = e.target;
         setIsPortrait(naturalHeight >= naturalWidth);
+        if (naturalWidth && naturalHeight) {
+            setImageAspect(naturalWidth / naturalHeight);
+        }
     };
 
     // 좋아요 토글 함수
@@ -56,6 +60,14 @@ const Detail = () => {
     const orientationClass =
         isPortrait === null ? "pending" : isPortrait ? "portrait" : "landscape";
 
+    const landscapeWidth =
+        isPortrait === false && imageAspect
+            ? Math.min(imageAspect * 640, 1260)
+            : null;
+
+    const landscapeStyle =
+        landscapeWidth !== null ? { maxWidth: `${landscapeWidth}px` } : {};
+
     return (
         <div className="Detail">
             <Header />
@@ -67,7 +79,10 @@ const Detail = () => {
                 >
                     <img src={leftArrow} alt="뒤로가기" />
                 </button>
-                <div className={`detail-container ${orientationClass}`}>
+                <div
+                    className={`detail-container ${orientationClass}`}
+                    style={landscapeStyle}
+                >
                     <button
                         className={`download-button ${orientationClass}`}
                         type="button"
@@ -75,7 +90,7 @@ const Detail = () => {
                         저장
                     </button>
 
-                    <div className="photo-wrapper">
+                    <div className="photo-wrapper" style={landscapeStyle}>
                         <img
                             src={photo.bucketFileUrl}
                             alt={photo.fileName}
@@ -84,7 +99,7 @@ const Detail = () => {
                         />
                     </div>
 
-                    <div className="photo-info">
+                    <div className="photo-info" style={landscapeStyle}>
                         <button
                             type="button"
                             className="like-button"
