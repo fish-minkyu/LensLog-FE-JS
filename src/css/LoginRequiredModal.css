@@ -1,0 +1,62 @@
+.LoginRequiredModal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000; /* 다른 요소들 위에 표시 */
+    background-color: rgba(0, 0, 0, 0.7);
+}
+
+.LoginRequiredModal .modal-content {
+    background: white;
+    padding: 30px;
+    border: 2px solid black;
+    border-radius: 10px;
+    width: 90%;
+    max-width: 400px;
+    text-align: center;
+}
+
+.LoginRequiredModal .modal-content > h3 {
+    margin-top: 0;
+    font-size: 24px;
+    margin-bottom: 20px;
+}
+
+.LoginRequiredModal .modal-content > p {
+    font-size: 16px;
+    margin-bottom: 30px;
+    line-height: 1.5;
+}
+
+.LoginRequiredModal .modal-content .modal-actions {
+    display: flex;
+    justify-content: center;
+    gap: 15px; /* 버튼 간격 */
+}
+
+.modal-button.confirm {
+    background-color: #f44336; /* 붉은색 */
+    border: none;
+    color: white;
+    font-size: 18px;
+    font-weight: 500;
+}
+
+/* "닫기" 버튼 스타일 */
+.modal-button:not(.confirm) {
+    /* confirm 클래스가 없는 버튼 (닫기 버튼) */
+    background-color: #ccc;
+    border: none;
+    color: #333;
+    font-size: 18px;
+    font-weight: 500;
+}
+
+.modal-button:not(.confirm):hover {
+    background-color: #bbb;
+}

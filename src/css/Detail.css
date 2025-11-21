@@ -28,7 +28,7 @@
 
 .Detail .detail-body .detail-container {
     position: relative;
-    border: 2px solid #a1a1a1;
+    border: 2px solid black;
     border-radius: 16px;
     padding: 48px 56px;
     display: flex;
@@ -149,6 +149,16 @@
 
 .detail-container.portrait .photo-info {
     align-self: flex-end;
+}
+
+.detail-container.portrait .detail-item:first-child .detail-value {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.download-button.portrait {
+    top: 49px;
 }
 
 /* Landscape layout ------------------------------------------------------ */

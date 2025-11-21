@@ -12,7 +12,7 @@ const Scroll = ({ categoryId }) => {
     const containerRef = useRef(null); // 스크롤 컨테이너 ref
 
     // 한 번에 가져올 사진 개수 (7열 * 3줄 기준)
-    const pageSize = 21;
+    const pageSize = 30;
 
     const fetchPhotos = useCallback(async () => {
         if (loading || !hasNext) return; // 로딩 중이거나 더 이상 데이터가 없으면 요청하지 않음

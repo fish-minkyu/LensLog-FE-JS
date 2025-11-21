@@ -6,6 +6,7 @@ import Header from "../components/Header";
 import leftArrow from "../assets/left-arrow.svg";
 import heartEmpty from "../assets/heart-empty.svg";
 import heartFull from "../assets/heart-full.svg";
+import LoginRequiredModal from "../components/LoginRequiredModal";
 
 const Detail = () => {
     const { photoId } = useParams();
@@ -17,6 +18,10 @@ const Detail = () => {
     const [isPortrait, setIsPortrait] = useState(null); // true = 세로, false = 가로
     const [imageAspect, setImageAspect] = useState(null); // width / height
     const [liked, setLiked] = useState(false);
+
+    // 모달 상태를 관리하기 위한 state
+    const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
+    const [modalMessage, setModalMessage] = useState("");
 
     useEffect(() => {
         const fetchPhoto = async () => {
@@ -60,7 +65,22 @@ const Detail = () => {
             setLiked((prev) => !prev);
         } catch (error) {
             console.error("좋아요가 오류 났습니다.", error);
+            if (error.response && error.response.status === 401) {
+                setModalMessage(
+                    error.response.data.message ||
+                        "인증된 사용자 정보가 없습니다."
+                );
+                setIsLoginModalOpen(true); // 모달 열기
+            }
         }
+    };
+
+    // 모달 닫기 핸들러
+    // 진실의 근원(Source of Truth)
+    // ; React의 컴포넌트 아키텍쳐와 상태 관리 원칙에 따르면, 모달이 닫히고 열리는 상태는
+    // 이 모달을 띄울지 말지를 결정하는 부모 컴포넌트가 관리해야 한다.
+    const handleCloseLoginModal = () => {
+        setIsLoginModalOpen(false);
     };
 
     // 다운로드
@@ -95,7 +115,13 @@ const Detail = () => {
             window.URL.revokeObjectURL(url);
         } catch (error) {
             console.error("이미지 다운로드 중 오류 발생:", error);
-            alert("다운로드에 실패했습니다.");
+            if (error.response && error.response.status === 401) {
+                setModalMessage(
+                    error.response.data.message ||
+                        "인증된 사용자 정보가 없습니다."
+                );
+                setIsLoginModalOpen(true); // 모달 열기
+            }
         }
     };
 
@@ -186,6 +212,13 @@ const Detail = () => {
                     </div>
                 </div>
             </div>
+
+            {/* 로그인 필요 모달 컴포넌트 렌더링 */}
+            <LoginRequiredModal
+                isOpen={isLoginModalOpen}
+                onClose={handleCloseLoginModal}
+                message={modalMessage}
+            />
         </div>
     );
 };
