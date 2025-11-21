@@ -1,20 +1,23 @@
 import "../css/Home.css";
 import Header from "../components/Header";
-import logoImage from "../assets/logo.svg";
-import { useNavigate } from "react-router-dom";
+import { useState } from "react";
 import Category from "../components/Category";
 import Scroll from "../components/Scroll";
 
 const Home = () => {
-    const nav = useNavigate();
+    const [selectedCategoryId, setSelectedCategoryId] = useState("all");
+
+    const handleCategoryChange = (categoryId) => {
+        setSelectedCategoryId(categoryId);
+    };
 
     return (
         <div className="Home">
             <Header />
             <div className="body-container">
-                <Category />
-                <Scroll />
-            </div> 
+                <Category onCategoryChange={setSelectedCategoryId} />
+                <Scroll categoryId={selectedCategoryId} />
+            </div>
         </div>
     );
 };
