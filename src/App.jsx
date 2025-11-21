@@ -11,6 +11,7 @@ import FindPasswordPage from "./pages/FindPasswordPage";
 import ResetPasswordPage from "./pages/ResetPasswordPage";
 import PasswordChangeSuccessPage from "./pages/PasswordChangeSuccessPage";
 import OAuth2RedircectHandler from "./components/OAuth2RedirectHandler";
+import NotFound from "./pages/NotFound";
 
 function App() {
     return (
@@ -32,6 +33,7 @@ function App() {
                     path="/oauth2/callback"
                     element={<OAuth2RedircectHandler />}
                 />
+                <Route path="*" element={<NotFound />} />
             </Routes>
         </AuthProvider>
     );
