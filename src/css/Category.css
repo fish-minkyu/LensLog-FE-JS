@@ -6,7 +6,7 @@
 }
 
 .Category .category-button {
-    background-color: #6b4f4f;
+    background-color: #ed1c23;
     color: white;
     border: none;
     padding: 8px 16px;
@@ -18,5 +18,5 @@
 }
 
 .category-button:hover {
-    background-color: #a67c7c;
+    background-color: #ed1c23;
 }
