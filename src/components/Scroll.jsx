@@ -7,70 +7,48 @@ import { Link } from "react-router-dom";
 const Scroll = ({ categoryId }) => {
     const [photos, setPhotos] = useState([]);
     const [loading, setLoading] = useState(false);
-    const [currentLastPhotoId, setCurrentLastPhotoId] = useState(null); // lastPhotoId 관리
-    const [hasNext, setHasNext] = useState(true); // 더 로드할 데이터가 있는지 여부
-    const containerRef = useRef(null); // 스크롤 컨테이너 ref
+    const [currentLastPhotoId, setCurrentLastPhotoId] = useState(null);
+    const [hasNext, setHasNext] = useState(true);
+    const containerRef = useRef(null);
 
-    // 한 번에 가져올 사진 개수 (7열 * 3줄 기준)
+    // ✨ 무한 요청 방지를 위해 loading과 hasNext를 Ref로 관리
+    const loadingRef = useRef(loading);
+    const hasNextRef = useRef(hasNext);
+
+    // loading/hasNext 상태가 변경될 때마다 Ref 값 업데이트
+    useEffect(() => {
+        loadingRef.current = loading;
+        hasNextRef.current = hasNext;
+    }, [loading, hasNext]);
+
     const pageSize = 30;
 
-    const fetchPhotos = useCallback(
-        async (cursorId) => {
-            if (loading || !hasNext) return; // 로딩 중이거나 더 이상 데이터가 없으면 요청하지 않음
+    /**
+     * @param {boolean} isInitialLoad - true면 photos 배열을 새로 덮어쓰고, false면 기존 배열에 추가(append)한다.
+     * @param {number|null} cursorId - 다음 페이지를 가져올 커서 ID (lastPhotoId). isInitialLoad가 true면 null로 무시한다.
+     */
+    const loadPhotos = useCallback(
+        async (isInitialLoad, cursorId) => {
+            // isInitialLoad가 false(스크롤 로드)일 때만 Ref의 최신 상태를 검사한다.
+            if (!isInitialLoad && (loadingRef.current || !hasNextRef.current))
+                return;
+
             setLoading(true);
 
             try {
+                // 초기 로드 시에는 cursorId를 null로 설정하여 첫 페이지를 요청합니다.
+                const lastPhotoIdToSend = isInitialLoad ? null : cursorId;
+
                 const params = {
-                    lastPhotoId: cursorId,
                     pageSize: pageSize,
                 };
 
-                // 백엔드의 요구사항에 맞게 categoryId 처리:
-                // 프론트에서 "all"이라는 문자열 카테고리가 오면 백엔드에 categoryId를 보내지 않음 (null로 처리됨)
-                // 그 외의 유효한 categoryId(숫자 Long)가 오면 해당 ID를 전송
-                if (categoryId !== "all" && categoryId !== null) {
-                    // categoryId가 "all"이 아니면 파라미터 추가
-                    params.categoryId = categoryId;
+                // 1. lastPhotoId 설정 (초기 로드 시에는 null)
+                if (lastPhotoIdToSend) {
+                    params.lastPhotoId = lastPhotoIdToSend;
                 }
-                // categoryId가 "all"이면 params.categoryId를 설정하지 않으므로,
-                // Axios가 해당 파라미터를 요청에서 제외하고 백엔드는 이를 null로 받게 됩니다.
 
-                const response = await axios.get(
-                    "http://localhost:8080/api/category/getList",
-                    { params }
-                );
-
-                const { receivedPhotos, nextCursorId, newHasNext } =
-                    response.data;
-
-                setPhotos((prev) => [...prev, ...receivedPhotos]);
-                setCurrentLastPhotoId(nextCursorId);
-                setHasNext(newHasNext);
-            } catch (error) {
-                console.error("사진 목록 조회 실패:", error);
-                setHasNext(false);
-            } finally {
-                setLoading(false);
-            }
-        },
-        [loading, hasNext, pageSize, categoryId]
-    ); // 의존성 배열에 변수 추가
-
-    // categoryId가 변경되면 상태를 초기화하고 처음부터 다시 불러옴
-    useEffect(() => {
-        const initialLoad = async () => {
-            // 이미 로딩 중이면 중복 요청 방지
-            if (loading) return;
-
-            setPhotos([]); // 사진목록 초기화
-            setCurrentLastPhotoId(null); // 커서 ID 초기화
-            setHasNext(true); // 다음 페이지 존재 여부 true로 설정
-            setLoading(true); // 요청 시작 알림
-
-            try {
-                const params = {
-                    pageSize: pageSize,
-                };
+                // 2. categoryId 설정
                 if (categoryId !== "all" && categoryId !== null) {
                     params.categoryId = categoryId;
                 }
@@ -86,38 +64,60 @@ const Scroll = ({ categoryId }) => {
                     hasNext: newHasNext,
                 } = response.data;
 
-                setPhotos(receivedPhotos); // 기존 목록 대신 새로 받은 목록으로 덮어쓰기
+                // 데이터 설정: 초기 로드(덮어쓰기) 또는 추가 로드(append)
+                if (isInitialLoad) {
+                    setPhotos(receivedPhotos);
+                } else {
+                    setPhotos((prev) => [...prev, ...receivedPhotos]);
+                }
+
                 setCurrentLastPhotoId(nextCursorId);
                 setHasNext(newHasNext);
             } catch (error) {
-                console.error("초기 사진 목록 조회 실패:", error);
+                console.error("사진 목록 조회 실패:", error);
                 setHasNext(false);
             } finally {
                 setLoading(false);
             }
-        };
+        },
+        // loadPhotos는 이제 categoryId와 pageSize에만 의존한다.
+        // 상태 값(loading, hasNext)은 Ref를 통해 접근하여 함수 인스턴스 변경을 최소화한다.
+        [pageSize, categoryId]
+    );
 
-        initialLoad();
-    }, [categoryId, pageSize]); // categoryId가 변경될 때마다 이펙트 실행
+    // 1. 카테고리 변경 감지 (초기 로드)
+    useEffect(() => {
+        // 무한 루프가 발생하지 않도록 초기 로드 시에도 loading 상태 확인을 추가한다.
+        // 하지만 Ref를 사용했으므로, 이미 로딩 중인 상태가 아니라면 무조건 실행된다.
 
-    // 무한 스크롤 이벤트 처리
+        setPhotos([]); // 이전 사진 목록 즉시 비우기
+        setCurrentLastPhotoId(null);
+        setHasNext(true);
+
+        // isInitialLoad: true, cursorId: null (무시됨)
+        loadPhotos(true, null);
+    }, [categoryId, loadPhotos]);
+
+    // 2. 무한 스크롤 이벤트 처리 (추가 로드)
     useEffect(() => {
         const container = containerRef.current;
         if (!container) return;
 
         const handleScroll = () => {
+            // 스크롤 이벤트에서는 로컬 상태(loading, hasNext)를 참조
             if (loading || !hasNext) return;
 
             const { scrollTop, clientHeight, scrollHeight } = container;
 
             if (scrollHeight - scrollTop - clientHeight < 300) {
-                fetchPhotos();
+                // isInitialLoad: false, cursorId: currentLastPhotoId (상태 관리된 커서)
+                loadPhotos(false, currentLastPhotoId);
             }
         };
 
         container.addEventListener("scroll", handleScroll);
         return () => container.removeEventListener("scroll", handleScroll);
-    }, [loading, hasNext, fetchPhotos]);
+    }, [loading, hasNext, loadPhotos, currentLastPhotoId]);
 
     const breakpointColumnsObj = {
         default: 5,
