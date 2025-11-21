@@ -87,6 +87,7 @@ const Login = () => {
             <div className="login-form">
                 <div className="input-group">
                     <input
+                        id="username"
                         className="input"
                         type="text"
                         placeholder=" "
@@ -98,6 +99,7 @@ const Login = () => {
 
                 <div className="input-group">
                     <input
+                        id="password"
                         className="input"
                         type={passwordVisible ? "text" : "password"}
                         placeholder=" "

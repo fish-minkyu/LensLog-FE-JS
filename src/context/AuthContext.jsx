@@ -8,7 +8,7 @@ const AuthContext = createContext(null);
 
 export const AuthProvider = ({ children }) => {
     const [isLoggedIn, setIsLoggedIn] = useState(false);
-    const [username, setUsername] = useState(null);
+    const [user, setUser] = useState(null); // { username, authority }
     const [authLoading, setAuthLoading] = useState(true); // 인증 상태 확인 중 로딩
 
     // 1. 컴포넌트 마운트 시(새로고침 등), 로그인 상태 및 사용자 정보 확인
@@ -20,18 +20,30 @@ export const AuthProvider = ({ children }) => {
                 );
                 if (response.data && response.data.username) {
                     setIsLoggedIn(true);
-                    setUsername(response.data.username);
+                    // checkLogin 응답에 authority가 없으면 로컬 스토리지에서 복원 시도
+                    const authority =
+                        response.data.authority ||
+                        localStorage.getItem("userAuthority") ||
+                        null;
+
+                    setUser({
+                        username: response.data.username,
+                        authority: authority,
+                    });
+
+                    // authority가 있다면 로컬 스토리지에 저장
+                    if (authority) {
+                        localStorage.setItem("userAuthority", authority);
+                    }
                 } else {
                     setIsLoggedIn(false);
-                    setUsername(null);
+                    setUser(null);
+                    localStorage.removeItem("userAuthority");
                 }
             } catch (error) {
-                console.log(
-                    "로그인 상태 확인 실패",
-                    error.response ? error.response.status : error.message
-                );
                 setIsLoggedIn(false);
-                setUsername(null);
+                setUser(null);
+                localStorage.removeItem("userAuthority");
             } finally {
                 setAuthLoading(false); // 로딩 완료
             }
@@ -43,13 +55,26 @@ export const AuthProvider = ({ children }) => {
     // 2. 로그인 API 호출 후 username과 로그인 상태를 설정하는 함수
     const login = (userData) => {
         setIsLoggedIn(true);
-        setUsername(userData.username);
+        const authority = userData.authority || null;
+
+        setUser({
+            username: userData.username,
+            authority: authority,
+        });
+
+        // authority 정보를 로컬 스토리지에 저장 (새로고침 시 복원용)
+        if (authority) {
+            localStorage.setItem("userAuthority", authority);
+        } else {
+            localStorage.removeItem("userAuthority");
+        }
     };
 
     // 3. 로그아웃 시 상태 초기화
     const logout = () => {
         setIsLoggedIn(false);
-        setUsername(null);
+        setUser(null);
+        localStorage.removeItem("userAuthority");
     };
 
     if (authLoading) {
@@ -57,7 +82,9 @@ export const AuthProvider = ({ children }) => {
     }
 
     return (
-        <AuthContext.Provider value={{ isLoggedIn, username, login, logout }}>
+        <AuthContext.Provider
+            value={{ isLoggedIn, user, authLoading, login, logout }}
+        >
             {children}
         </AuthContext.Provider>
     );

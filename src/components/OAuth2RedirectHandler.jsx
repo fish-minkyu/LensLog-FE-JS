@@ -6,7 +6,7 @@ import { useAuth } from "../context/AuthContext";
 // 리다이렉트 시, 리다이렉트 응답 바디 데이터를 가져올 수 없으므로 해당 컴포넌트를 만들었다.
 const OAuth2RedircectHandler = () => {
     const nav = useNavigate();
-    const { isLoggedIn, username, authLoading } = useAuth();
+    const { isLoggedIn, user, authLoading } = useAuth();
 
     useEffect(() => {
         // AuthContext의 useEffect에서 이미 로그인 상태를 확인하고
@@ -30,7 +30,7 @@ const OAuth2RedircectHandler = () => {
 
         // 가장 간단한 방법 (authContext의 checkLoginStatus에 의존)
         nav("/", { replace: true });
-    }, [nav, isLoggedIn, username]);
+    }, [nav, isLoggedIn, user]);
 
     return <></>;
 };

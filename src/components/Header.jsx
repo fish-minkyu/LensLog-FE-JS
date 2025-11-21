@@ -4,10 +4,18 @@ import { useNavigate, Link } from "react-router-dom";
 import axios from "axios";
 import { useAuth } from "../context/AuthContext";
 import logoImage from "../assets/logo.svg";
+import uploadImg from "../assets/upload-img.svg";
 
 const Header = () => {
     const nav = useNavigate();
-    const { isLoggedIn, username, logout } = useAuth();
+    const { isLoggedIn, user, logout } = useAuth();
+
+    // 권한이 ROLE_ADMIN인지 확인하는 함수
+    const isAdmin = () => {
+        if (!user || !user.authority) return false;
+        // authority가 "[ROLE_ADMIN]" 형식이므로 문자열에 ROLE_ADMIN이 포함되어 있는지 확인
+        return user.authority.includes("ROLE_ADMIN");
+    };
 
     const handleLogout = async () => {
         try {
@@ -36,12 +44,27 @@ const Header = () => {
     const userMenu = (
         <div className="auth-links">
             <span className="welcome-message">
-                환영합니다! {username || "사용자"}님
+                환영합니다! {user?.username || "사용자"}님
             </span>
             <span className="auth-separator">|</span>
             <button className="auth-link" onClick={handleLogout}>
                 로그아웃
             </button>
+            {isAdmin() && (
+                <>
+                    <button
+                        className="photo-upload-button"
+                        onClick={() => nav("/admin")}
+                    >
+                        <img
+                            src={uploadImg}
+                            onClick={() => {
+                                nav("/upload");
+                            }}
+                        />
+                    </button>
+                </>
+            )}
         </div>
     );
 

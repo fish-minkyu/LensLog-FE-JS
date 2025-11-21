@@ -59,8 +59,8 @@
 }
 
 /* 입력한 포커스 혹은 내용이 있을 때 */
-.input-group input:focus + label,
-.input-group input:not(:placeholder-shown) + label {
+.Login .login-form .input-group input:focus + label,
+.Login .login-form .input-group input:not(:placeholder-shown) + label {
     top: -8px;
     font-size: 12px;
     color: black;
