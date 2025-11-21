@@ -8,8 +8,7 @@ import google from "../assets/social-google.svg";
 import naver from "../assets/social-naver.svg";
 import eyeOpen from "../assets/open-eye.svg";
 import eyeClosed from "../assets/closed-eye.svg";
-import Header from "../components/Header";
-import logoImage from "../assets/logo.svg";
+import LogoHeader from "../components/LogoHeader";
 import { useAuth } from "../context/AuthContext";
 
 const Login = () => {
@@ -19,10 +18,6 @@ const Login = () => {
     const [errorMessage, setErrorMessage] = useState("");
     const nav = useNavigate();
     const { login } = useAuth();
-
-    const handleLogoClick = () => {
-        nav("/");
-    };
 
     // 1. 이메일 입력 필드의 값이 변경될 때 호출될 핸들러
     const handleUsernameChange = (e) => {
@@ -88,12 +83,7 @@ const Login = () => {
 
     return (
         <div className="Login">
-            <img
-                className="logo-image"
-                src={logoImage}
-                alt="logo"
-                onClick={handleLogoClick}
-            />
+            <LogoHeader />
             <div className="login-form">
                 <div className="input-group">
                     <input
