@@ -1,31 +1,21 @@
 import "../css/Header.css";
-import React from "react";
+import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
-import axios from "axios";
 import { useAuth } from "../context/AuthContext";
 import logoImage from "../assets/logo.svg";
 import uploadImg from "../assets/upload-img.svg";
+import LogoutModal from "./LogoutModal";
 
 const Header = () => {
     const nav = useNavigate();
-    const { isLoggedIn, user, logout } = useAuth();
+    const { isLoggedIn, user } = useAuth();
+    const [isLogoutModalOpen, setIsLogoutModalOpen] = useState(false);
 
     // 권한이 ROLE_ADMIN인지 확인하는 함수
     const isAdmin = () => {
         if (!user || !user.authority) return false;
         // authority가 "[ROLE_ADMIN]" 형식이므로 문자열에 ROLE_ADMIN이 포함되어 있는지 확인
         return user.authority.includes("ROLE_ADMIN");
-    };
-
-    const handleLogout = async () => {
-        try {
-            // HttpOnly 속성이 설정된 쿠키의 정보들을 직접 지울 수 없다.
-            await axios.post("http://localhost:8080/api/auth/logout");
-            logout();
-        } catch (error) {
-            console.error("로그아웃 실패", error);
-            nav("/", { replace: true });
-        }
     };
 
     // 로그인 안된 경우 로그인, 회원가입 버튼 컴포넌트
@@ -47,7 +37,12 @@ const Header = () => {
                 환영합니다! {user?.username || "사용자"}님
             </span>
             <span className="auth-separator">|</span>
-            <button className="auth-link" onClick={handleLogout}>
+            <button
+                className="auth-link"
+                onClick={() => {
+                    setIsLogoutModalOpen(true);
+                }}
+            >
                 로그아웃
             </button>
             {isAdmin() && (
@@ -72,19 +67,27 @@ const Header = () => {
     const rightChildContent = isLoggedIn ? userMenu : authButtons;
 
     return (
-        <header className="Header">
-            <div className="header-item left-child">
-                <img
-                    className="logo-image"
-                    src={logoImage}
-                    alt="logo"
-                    onClick={() => {
-                        nav("/");
-                    }}
-                />
-            </div>
-            <div className="header-item right-child">{rightChildContent}</div>
-        </header>
+        <>
+            <header className="Header">
+                <div className="header-item left-child">
+                    <img
+                        className="logo-image"
+                        src={logoImage}
+                        alt="logo"
+                        onClick={() => {
+                            nav("/");
+                        }}
+                    />
+                </div>
+                <div className="header-item right-child">
+                    {rightChildContent}
+                </div>
+            </header>
+            <LogoutModal
+                isOpen={isLogoutModalOpen}
+                onClose={() => setIsLogoutModalOpen(false)}
+            />
+        </>
     );
 };
 

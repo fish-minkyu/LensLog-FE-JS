@@ -1,4 +1,4 @@
-import "../css/LoginRequiredModal.css";
+import "../css/Modal.css";
 import { useNavigate } from "react-router-dom";
 
 const LoginRequiredModal = ({ isOpen, onClose, message }) => {
@@ -14,7 +14,7 @@ const LoginRequiredModal = ({ isOpen, onClose, message }) => {
     };
 
     return (
-        <div className="LoginRequiredModal" onClick={onClose}>
+        <div className="Modal" onClick={onClose}>
             {" "}
             {/* 외부 클릭 시 모달 닫기 */}
             <div className="modal-content" onClick={(e) => e.stopPropagation()}>
@@ -28,7 +28,7 @@ const LoginRequiredModal = ({ isOpen, onClose, message }) => {
                     </button>
                     {/* 이제 onConfirm props 없이 내부에서 직접 처리 */}
                     <button
-                        className="modal-button confirm"
+                        className="modal-button yes"
                         onClick={handleGoToLogin}
                     >
                         로그인
