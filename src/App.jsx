@@ -10,6 +10,7 @@ import FindIdResultPage from "./pages/FindIdResultPage";
 import FindPasswordPage from "./pages/FindPasswordPage";
 import ResetPasswordPage from "./pages/ResetPasswordPage";
 import PasswordChangeSuccessPage from "./pages/PasswordChangeSuccessPage";
+import Upload from "./pages/Upload";
 import OAuth2RedircectHandler from "./components/OAuth2RedirectHandler";
 import NotFound from "./pages/NotFound";
 
@@ -29,6 +30,7 @@ function App() {
                     path="/change/password"
                     element={<PasswordChangeSuccessPage />}
                 />
+                <Route path="/upload" element={<Upload />} />
                 <Route
                     path="/oauth2/callback"
                     element={<OAuth2RedircectHandler />}
