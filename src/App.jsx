@@ -6,7 +6,7 @@ import Detail from "./pages/Detail";
 import Register from "./pages/Register";
 import Login from "./pages/Login";
 import FindIdPage from "./pages/FindIdPage";
-import FindIdResultPage from "./pages/FindIdResultPage";
+import ResultFindIdPage from "./pages/ResultFindIdPage";
 import FindPasswordPage from "./pages/FindPasswordPage";
 import ResetPasswordPage from "./pages/ResetPasswordPage";
 import PasswordChangeSuccessPage from "./pages/PasswordChangeSuccessPage";
@@ -28,7 +28,7 @@ function App() {
                     element={<ResultRegisterPage />}
                 />
                 <Route path="/find/id" element={<FindIdPage />} />
-                <Route path="/result/id" element={<FindIdResultPage />} />
+                <Route path="/result/id" element={<ResultFindIdPage />} />
                 <Route path="/find/password" element={<FindPasswordPage />} />
                 <Route path="/reset/password" element={<ResetPasswordPage />} />
                 <Route

@@ -98,7 +98,7 @@
     user-select: none;
 }
 
-.underline {
+.Login .underline {
     border: none; /* 기본 보더 제거 */
     width: 500px;
     border-top: 2px solid black; /* 얇은 상단 보더로 구분선 역할 */

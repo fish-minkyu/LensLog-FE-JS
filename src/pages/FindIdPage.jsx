@@ -45,7 +45,7 @@ const FindIdPage = () => {
             setErrorMessage("");
             nav("/result/id", {
                 replace: true,
-                state: { userInfo: response.data }, // 결과 페이지에서 location.state로 확인 가능
+                state: { userInfo: response.data, name: name }, // 결과 페이지에서 location.state로 확인 가능
             });
         } catch (error) {
             if (error.response && error.response.status === 404) {

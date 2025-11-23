@@ -29,3 +29,42 @@
 body * {
     font-family: "AppleSDGothicNeo";
 }
+
+input {
+    width: 100%;
+    padding: 10px 40px 10px 12px;
+    font-size: 16px;
+    border: 2px solid #ccc;
+    border-radius: 5px;
+    outline: none;
+    box-sizing: border-box;
+}
+
+input:focus {
+    border-color: green;
+}
+
+label {
+    position: absolute;
+    left: 12px;
+    top: 12px;
+    color: #909090;
+    font-size: 16px;
+    pointer-events: none;
+    transition: all 0.2s ease;
+}
+
+input:focus + label,
+input:not([value=""]) + label,
+input:not(:placeholder-shown) + label {
+    top: -10px;
+    left: 8px;
+    font-size: 12px;
+    color: #909090;
+    background: white;
+    padding: 0 4px;
+}
+
+input:not([value=""]) + label:not(.input-error-label) {
+    color: #909090;
+}
