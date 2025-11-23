@@ -10,6 +10,7 @@ import FindIdResultPage from "./pages/FindIdResultPage";
 import FindPasswordPage from "./pages/FindPasswordPage";
 import ResetPasswordPage from "./pages/ResetPasswordPage";
 import PasswordChangeSuccessPage from "./pages/PasswordChangeSuccessPage";
+import ResultRegisterPage from "./pages/ResultRegisterPage";
 import Upload from "./pages/Upload";
 import OAuth2RedircectHandler from "./components/OAuth2RedirectHandler";
 import NotFound from "./pages/NotFound";
@@ -22,6 +23,10 @@ function App() {
                 <Route path="/login" element={<Login />} />
                 <Route path="/detail/:photoId" element={<Detail />} />
                 <Route path="/register" element={<Register />} />
+                <Route
+                    path="/result/register"
+                    element={<ResultRegisterPage />}
+                />
                 <Route path="/find/id" element={<FindIdPage />} />
                 <Route path="/result/id" element={<FindIdResultPage />} />
                 <Route path="/find/password" element={<FindPasswordPage />} />

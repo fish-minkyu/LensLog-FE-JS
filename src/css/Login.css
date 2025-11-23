@@ -9,12 +9,6 @@
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
 }
 
-.Login .logo-image {
-    height: 60px; /* 로고 이미지의 높이 조절 */
-    cursor: pointer; /* 클릭 가능하다는 표시 */
-    /* 필요시 max-width 등 추가하여 반응형 처리 */
-}
-
 .Login .login-form {
     max-width: 400px; /* 로그인 버튼 너비와 일치시키기 위해 명시적으로 너비 설정 */
     margin: 0 auto; /* 중앙 정렬 */

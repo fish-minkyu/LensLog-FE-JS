@@ -1,0 +1,202 @@
+.Register {
+    max-width: 620px;
+    box-sizing: border-box;
+    margin: 80px auto;
+    border-radius: 12px;
+    background-color: #fff;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 40px 20px;
+}
+
+.Register .email-wrapper {
+    margin-top: 20px;
+}
+
+.user-info-wrapper {
+    margin-top: 20px;
+    padding-bottom: 25px;
+}
+
+.email-wrapper {
+    padding-bottom: 25px;
+}
+
+.input-group {
+    position: relative;
+    margin-bottom: 25px;
+    width: 380px;
+}
+
+.input-container {
+    position: relative;
+}
+
+input {
+    width: 100%;
+    padding: 10px 40px 10px 12px;
+    font-size: 16px;
+    border: 2px solid #ccc;
+    border-radius: 5px;
+    outline: none;
+    box-sizing: border-box;
+}
+
+input:focus {
+    border-color: green;
+}
+
+label {
+    position: absolute;
+    left: 12px;
+    top: 12px;
+    color: #909090;
+    font-size: 16px;
+    pointer-events: none;
+    transition: all 0.2s ease;
+}
+
+input:focus + label,
+input:not([value=""]) + label,
+input:not(:placeholder-shown) + label {
+    top: -10px;
+    left: 8px;
+    font-size: 12px;
+    color: #909090;
+    background: white;
+    padding: 0 4px;
+}
+
+input:not([value=""]) + label:not(.input-error-label) {
+    color: #909090;
+}
+
+.password-visible-icon {
+    position: absolute;
+    right: 8px;
+    top: 25%;
+    width: 24px;
+    height: 24px;
+    z-index: 10;
+    opacity: 0.7; /* 살짝 투명하게 하여 UI 요소처럼 보이게 함 */
+}
+
+/* ------------------------------------------------------- */
+/* 에러 발생 시 스타일 */
+/* ------------------------------------------------------- */
+.input-error {
+    border-color: red !important;
+}
+
+.input-error-label {
+    color: red !important;
+}
+
+/* 그룹화된 에러 메시지 스타일 */
+.error-messages-group {
+    width: 100%;
+    margin-top: -15px;
+    margin-bottom: 10px;
+    padding: 5px 0 5px 2px;
+}
+
+.error-message {
+    color: red;
+    font-size: 14px;
+    margin: 0;
+    padding-top: 2px;
+    user-select: none;
+    position: relative;
+}
+
+/* ------------------------------------------------------- */
+/* Success Message & Timer Styling                         */
+/* ------------------------------------------------------- */
+.verification-message {
+    margin-top: -15px; /* input-group margin 상쇄 */
+    margin-bottom: 15px;
+    font-size: 14px;
+    display: flex;
+    justify-content: flex-start;
+    align-items: baseline;
+    width: 100%;
+    padding: 0 2px;
+    box-sizing: border-box;
+}
+
+.success-text {
+    color: green; /* Green color */
+    font-weight: 500;
+}
+
+.timer-text {
+    margin-left: 4px;
+    color: green; /* Red color for urgency, or use green/gray */
+    font-weight: bold;
+    font-family: monospace; /* 고정폭 글꼴로 숫자 흔들림 방지 */
+}
+
+.register-btn {
+    width: 380px;
+    padding: 12px 20px;
+    font-size: 18px;
+    font-weight: bold;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    margin-top: 30px;
+    background-color: #5a67d8; /* Primary Color */
+    color: white;
+    transition: background-color 0.3s ease;
+    position: relative; /* 스피너 위치 기준점 */
+    height: 50px; /* 높이 고정 (로딩 시 찌그러짐 방지) */
+}
+
+.register-btn:hover:not(:disabled) {
+    background-color: #434190;
+}
+
+.register-btn:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+    color: #666;
+}
+
+/* 로딩 중일 때 텍스트 숨기기 */
+.register-btn.loading .button-content {
+    visibility: hidden;
+}
+
+/* 로딩 중일 때 배경색 */
+.register-btn.loading {
+    background-color: #6c757d;
+    color: transparent;
+}
+
+.spinner {
+    border: 3px solid rgba(255, 255, 255, 0.3);
+    border-radius: 50%;
+    border-top: 3px solid #fff;
+    width: 24px;
+    height: 24px;
+    animation: spin 1s linear infinite;
+
+    /* 버튼 중앙 정렬 */
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    margin-top: -12px; /* height의 절반 */
+    margin-left: -12px; /* width의 절반 */
+}
+
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}

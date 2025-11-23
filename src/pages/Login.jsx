@@ -12,7 +12,7 @@ import LogoHeader from "../components/LogoHeader";
 import { useAuth } from "../context/AuthContext";
 
 const Login = () => {
-    const [username, setUsername] = useState(""); // password
+    const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
     const [passwordVisible, setPasswordVisible] = useState(false);
     const [errorMessage, setErrorMessage] = useState("");
@@ -131,7 +131,7 @@ const Login = () => {
                     <span className="separator">|</span>
                     <Link to={"/find/password"}>비밀번호 찾기</Link>
                     <span className="separator">|</span>
-                    <Link to={"/sign-up"}>회원가입</Link>
+                    <Link to={"/register"}>회원가입</Link>
                 </div>
             </div>
 
