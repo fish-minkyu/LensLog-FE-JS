@@ -1,0 +1,39 @@
+.FindIdPage {
+    max-width: 620px;
+    box-sizing: border-box;
+    margin: 80px auto;
+    border-radius: 12px;
+    background-color: #fff;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    padding: 10px 20px;
+}
+.FindIdPage .input-wrapper {
+    margin-bottom: 380px;
+}
+
+.FindIdPage .title {
+    display: flex;
+    align-items: flex-start;
+}
+
+.result-id-page-error-message {
+    color: red;
+    font-size: 14px;
+    user-select: none;
+    position: relative;
+    margin-top: -18px;
+}
+
+.find-id-button {
+    width: 380px;
+    height: 50px;
+    cursor: pointer;
+    border: none;
+    border-radius: 10px;
+    font-weight: bold;
+}
