@@ -9,7 +9,7 @@ import FindIdPage from "./pages/FindIdPage";
 import ResultFindIdPage from "./pages/ResultFindIdPage";
 import FindPasswordPage from "./pages/FindPasswordPage";
 import ResetPasswordPage from "./pages/ResetPasswordPage";
-import PasswordChangeSuccessPage from "./pages/PasswordChangeSuccessPage";
+import ResultPasswordChangePage from "./pages/ResultPasswordChangePage";
 import ResultRegisterPage from "./pages/ResultRegisterPage";
 import Upload from "./pages/Upload";
 import OAuth2RedircectHandler from "./components/OAuth2RedirectHandler";
@@ -30,10 +30,13 @@ function App() {
                 <Route path="/find/id" element={<FindIdPage />} />
                 <Route path="/result/id" element={<ResultFindIdPage />} />
                 <Route path="/find/password" element={<FindPasswordPage />} />
-                <Route path="/reset/password" element={<ResetPasswordPage />} />
                 <Route
                     path="/change/password"
-                    element={<PasswordChangeSuccessPage />}
+                    element={<ResetPasswordPage />}
+                />
+                <Route
+                    path="/result/password"
+                    element={<ResultPasswordChangePage />}
                 />
                 <Route path="/upload" element={<Upload />} />
                 <Route
