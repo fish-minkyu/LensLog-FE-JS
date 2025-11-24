@@ -78,6 +78,7 @@ const Register = () => {
         return "";
     };
 
+    // -------------- 핸들러 --------------
     // 핸들러: 아이디
     const handleUsernameChange = (e) => {
         setUsername(e.target.value);
@@ -178,6 +179,8 @@ const Register = () => {
             name,
             password,
             email,
+            provider: "local",
+            authority: "ROLE_USER",
             verifyCode,
         };
 
@@ -376,6 +379,7 @@ const Register = () => {
                         <div className="input-container">
                             <input
                                 id="email"
+                                type="email"
                                 value={email}
                                 className={emailErrorMsg ? "input-error" : ""}
                                 onBlur={handleEmailBlur}

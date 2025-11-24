@@ -8,7 +8,7 @@ const AuthContext = createContext(null);
 
 export const AuthProvider = ({ children }) => {
     const [isLoggedIn, setIsLoggedIn] = useState(false);
-    const [user, setUser] = useState(null); // { username, authority }
+    const [user, setUser] = useState(null); // { username, provider, authority }
     const [authLoading, setAuthLoading] = useState(true); // 인증 상태 확인 중 로딩
 
     // 1. 컴포넌트 마운트 시(새로고침 등), 로그인 상태 및 사용자 정보 확인
@@ -20,6 +20,12 @@ export const AuthProvider = ({ children }) => {
                 );
                 if (response.data && response.data.username) {
                     setIsLoggedIn(true);
+                    // checkLogin 응답에 provider가 없으면 로컬 스토리지에서 복원 시도
+                    const provider =
+                        response.data.provider ||
+                        localStorage.getItem("provider") ||
+                        null;
+
                     // checkLogin 응답에 authority가 없으면 로컬 스토리지에서 복원 시도
                     const authority =
                         response.data.authority ||
@@ -28,8 +34,15 @@ export const AuthProvider = ({ children }) => {
 
                     setUser({
                         username: response.data.username,
+                        provider: provider,
                         authority: authority,
                     });
+                    // provider가 있다면 로컬 스토리지에 저장
+                    if (provider) {
+                        localStorage.setItem("provider", provider);
+                    } else {
+                        localStorage.removeItem("provider");
+                    }
 
                     // authority가 있다면 로컬 스토리지에 저장
                     if (authority) {
@@ -43,6 +56,7 @@ export const AuthProvider = ({ children }) => {
             } catch (error) {
                 setIsLoggedIn(false);
                 setUser(null);
+                localStorage.removeItem("provider");
                 localStorage.removeItem("userAuthority");
             } finally {
                 setAuthLoading(false); // 로딩 완료
@@ -55,12 +69,21 @@ export const AuthProvider = ({ children }) => {
     // 2. 로그인 API 호출 후 username과 로그인 상태를 설정하는 함수
     const login = (userData) => {
         setIsLoggedIn(true);
+        const provider = userData.provider || null;
         const authority = userData.authority || null;
 
         setUser({
             username: userData.username,
+            provider: provider,
             authority: authority,
         });
+
+        // provider 정보를 로컬 스토리지에 저장 (새로고침 시 복원용)
+        if (provider) {
+            localStorage.setItem("provider", provider);
+        } else {
+            localStorage.removeItem("provider");
+        }
 
         // authority 정보를 로컬 스토리지에 저장 (새로고침 시 복원용)
         if (authority) {
@@ -74,6 +97,7 @@ export const AuthProvider = ({ children }) => {
     const logout = () => {
         setIsLoggedIn(false);
         setUser(null);
+        localStorage.removeItem("provider");
         localStorage.removeItem("userAuthority");
     };
 
