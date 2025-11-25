@@ -1,6 +1,7 @@
 import "../css/Scroll.css";
 import { useState, useRef, useEffect, useCallback } from "react";
 import axios from "axios";
+import API_ENDPOINTS from "../constants/api";
 import Masonry from "react-masonry-css";
 import { Link } from "react-router-dom";
 
@@ -54,7 +55,7 @@ const Scroll = ({ categoryId }) => {
                 }
 
                 const response = await axios.get(
-                    "http://localhost:8080/api/category/getList",
+                    API_ENDPOINTS.CATEGORY.GET_PHOTO_LIST_GROUP_BY_CATEGORY,
                     { params }
                 );
 

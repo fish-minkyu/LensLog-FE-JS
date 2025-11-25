@@ -1,6 +1,7 @@
 import "../css/Modal.css";
 import { useAuth } from "../context/AuthContext";
 import axios from "axios";
+import API_ENDPOINTS from "../constants/api";
 import { useNavigate } from "react-router-dom";
 
 const LogoutModal = ({ isOpen, onClose }) => {
@@ -12,7 +13,7 @@ const LogoutModal = ({ isOpen, onClose }) => {
     const handleLogout = async () => {
         try {
             // HttpOnly 속성이 설정된 쿠키의 정보들을 직접 지울 수 없다.
-            await axios.post("http://localhost:8080/api/auth/logout");
+            await axios.post(API_ENDPOINTS.AUTH.LOGOUT);
             logout();
             onClose();
         } catch (error) {

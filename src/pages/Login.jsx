@@ -1,5 +1,6 @@
 import "../css/Login.css";
 import axios from "axios";
+import API_ENDPOINTS from "../constants/api";
 import Button from "../components/Button";
 import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
@@ -43,10 +44,10 @@ const Login = () => {
                 return;
             }
 
-            const response = await axios.post(
-                "http://localhost:8080/api/auth/login",
-                { username: username, password: password }
-            );
+            const response = await axios.post(API_ENDPOINTS.AUTH.LOGIN, {
+                username: username,
+                password: password,
+            });
 
             if (response.status === 200) {
                 const userData = response.data;

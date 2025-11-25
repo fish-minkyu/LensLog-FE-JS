@@ -4,6 +4,7 @@ import LogoHeader from "../components/LogoHeader";
 import eyeOpen from "../assets/open-eye-gray.svg";
 import eyeClosed from "../assets/closed-eye-gray.svg";
 import axios from "axios";
+import API_ENDPOINTS from "../constants/api";
 import { useNavigate } from "react-router-dom";
 
 const Register = () => {
@@ -136,7 +137,7 @@ const Register = () => {
         setIsLoading(true); // 로딩 시작
 
         try {
-            await axios.post("http://localhost:8080/api/mail/send", { email });
+            await axios.post(API_ENDPOINTS.EMAIL.SEND_EMAIL, { email });
             setIsVerifiedRequested(true);
         } catch (error) {
             console.error("인증 메일 발송 실패: ", error);
@@ -186,7 +187,7 @@ const Register = () => {
 
         try {
             const response = await axios.post(
-                "http://localhost:8080/api/auth/join",
+                API_ENDPOINTS.AUTH.SIGN_UP,
                 userDto
             );
             nav("/result/register", { replace: true });

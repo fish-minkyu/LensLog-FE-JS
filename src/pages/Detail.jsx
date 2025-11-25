@@ -7,6 +7,7 @@ import leftArrow from "../assets/left-arrow.svg";
 import heartEmpty from "../assets/heart-empty.svg";
 import heartFull from "../assets/heart-full.svg";
 import LoginRequiredModal from "../components/LoginRequiredModal";
+import API_ENDPOINTS from "../constants/api";
 
 const Detail = () => {
     const { photoId } = useParams();
@@ -30,7 +31,7 @@ const Detail = () => {
                 setError(null); // 이전 에러 메시지 초기화
 
                 const response = await axios.get(
-                    `http://localhost:8080/api/photo/getOne/${photoId}`
+                    API_ENDPOINTS.PHOTO.GET_PHOTO(photoId)
                 );
 
                 setPhoto(response.data);
@@ -61,7 +62,7 @@ const Detail = () => {
     // 좋아요 토글 함수
     const toggleLike = async () => {
         try {
-            await axios.post(`http://localhost:8080/api/good/${photoId}`);
+            await axios.post(API_ENDPOINTS.GOOD.SAVE_LIKE(photoId));
             setLiked((prev) => !prev);
         } catch (error) {
             console.error("좋아요가 오류 났습니다.", error);
@@ -87,7 +88,7 @@ const Detail = () => {
     const handleImageDownload = async () => {
         try {
             const response = await axios.get(
-                `http://localhost:8080/api/photo/download/${photoId}`,
+                API_ENDPOINTS.PHOTO.DOWNLOAD_PHOTO(photoId),
                 { responseType: "blob" }
             );
 

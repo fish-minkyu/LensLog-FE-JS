@@ -1,4 +1,5 @@
 import axios from "axios";
+import API_ENDPOINTS from "../constants/api";
 import { useState, createContext, useContext, useEffect } from "react";
 
 // Axios 전역 기본 설정, withCredentials true 추가
@@ -16,7 +17,7 @@ export const AuthProvider = ({ children }) => {
         const checkLoginStatus = async () => {
             try {
                 const response = await axios.get(
-                    "http://localhost:8080/api/auth/checkLogin"
+                    API_ENDPOINTS.AUTH.CHECK_LOGIN
                 );
                 if (response.data && response.data.username) {
                     setIsLoggedIn(true);

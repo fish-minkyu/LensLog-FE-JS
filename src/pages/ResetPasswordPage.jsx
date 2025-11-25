@@ -2,6 +2,7 @@ import "../css/ResetPasswordPage.css";
 import { useState, useEffect, useRef } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import axios from "axios";
+import API_ENDPOINTS from "../constants/api";
 import Header from "../components/Header";
 import eyeOpen from "../assets/open-eye-gray.svg";
 import eyeClosed from "../assets/closed-eye.svg";
@@ -173,7 +174,7 @@ const ResetPasswordPage = () => {
 
             // 백엔드 API 호출
             const response = await axios.put(
-                "http://localhost:8080/api/auth/change/password",
+                API_ENDPOINTS.AUTH.CHANGE_PWD,
                 requestBody,
                 {
                     headers: {

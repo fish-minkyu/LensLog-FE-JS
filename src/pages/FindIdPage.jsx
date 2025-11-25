@@ -3,6 +3,7 @@ import LogoHeader from "../components/LogoHeader";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import API_ENDPOINTS from "../constants/api";
 
 // 아이디 찾기 입력 화면
 const FindIdPage = () => {
@@ -37,10 +38,9 @@ const FindIdPage = () => {
                 return;
             }
 
-            const response = await axios.get(
-                "http://localhost:8080/api/auth/find/username",
-                { params: { name, email } }
-            );
+            const response = await axios.get(API_ENDPOINTS.AUTH.FIND_USERNAME, {
+                params: { name, email },
+            });
             // 성공 시 에러 메시지 초기화
             setErrorMessage("");
             nav("/result/id", {

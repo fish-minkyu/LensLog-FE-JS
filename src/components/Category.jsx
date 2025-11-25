@@ -1,6 +1,7 @@
 import "../css/Category.css";
 import { useEffect, useState } from "react";
 import axios from "axios";
+import API_ENDPOINTS from "../constants/api";
 
 const Category = ({ onCategoryChange }) => {
     const [categories, setCategories] = useState([]);
@@ -10,7 +11,7 @@ const Category = ({ onCategoryChange }) => {
         const getCategories = async () => {
             try {
                 const response = await axios.get(
-                    "http://localhost:8080/api/category"
+                    API_ENDPOINTS.CATEGORY.GET_CATEGORY_LIST
                 );
                 setCategories(response.data);
             } catch (error) {

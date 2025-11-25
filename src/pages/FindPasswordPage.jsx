@@ -2,6 +2,7 @@ import "../css/FindPasswordPage.css";
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import API_ENDPOINTS from "../constants/api";
 import LogoHeader from "../components/LogoHeader";
 
 // 비밀번호 찾기 페이지
@@ -110,7 +111,7 @@ const FindPasswordPage = () => {
         setIsLoading(true); // 로딩 시작
 
         try {
-            await axios.post("http://localhost:8080/api/mail/send", { email });
+            await axios.post(API_ENDPOINTS.EMAIL.SEND_EMAIL, { email });
             setIsVerifiedRequested(true);
         } catch (error) {
             console.error("인증 메일 발송 실패: ", error);
@@ -123,7 +124,7 @@ const FindPasswordPage = () => {
     const handleCheckVerification = async () => {
         try {
             const response = await axios.post(
-                "http://localhost:8080/api/auth/verification/password",
+                API_ENDPOINTS.AUTH.VERIFICATION_PWD,
                 { username, email, provider: "local", verifyCode }
             );
 
