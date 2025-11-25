@@ -1,0 +1,208 @@
+/* 1. 전체 컨테이너: 중앙 정렬 및 여백만 담당 */
+.Upload {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 40px 20px;
+    box-sizing: border-box;
+}
+
+/* 2. 실제 그리드 레이아웃은 여기서 정의  */
+.upload-body {
+    display: grid;
+    grid-template-columns: 1fr 1px 1fr; /* 왼쪽(1) | 구분선(1px) | 오른쪽(1) */
+    column-gap: 60px;
+    row-gap: 30px;
+
+    /* Grid 영역 배치 */
+    grid-template-areas:
+        "title title title"
+        "upload line category"
+        "inputs line category";
+}
+
+/* 헤더 컴포넌트 여백 */
+.Upload > header {
+    margin-bottom: 30px;
+}
+
+/* --- 타이틀 영역 --- */
+.title-header {
+    grid-area: title;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.title-header h3 {
+    font-size: 28px;
+    font-weight: bold;
+    margin: 0;
+}
+
+/* 게시 버튼 (빨간색) */
+.title-header .upload-button {
+    background-color: #f44336;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 24px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+
+.title-header .upload-button:hover {
+    background-color: #d32f2f;
+}
+
+/* --- 이미지 업로드 영역 (왼쪽) --- */
+.Upload .upload-area {
+    /* 기존 스타일 유지 */
+    background-color: #eee;
+    border-radius: 12px;
+    height: 400px;
+
+    /* 내부 요소를 중앙 정렬하고 꽉 채우기 위해 설정 */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    overflow: hidden; /* 이미지가 둥근 모서리를 넘지 않도록 */
+}
+
+/* 라벨(Dropzone)이 회색 박스를 빈틈없이 꽉 채우도록 설정 */
+.Upload .upload-area .upload-dropzone {
+    width: 100%;
+    height: 100%;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer; /* 마우스 올리면 손가락 모양 */
+    text-align: center;
+    color: #555;
+
+    /* 중요: 드래그 시 자식 요소들이 이벤트를 방해하지 않도록 처리할 수도 있으나, 
+       React 이벤트 핸들러에서 stopPropagation을 쓰면 해결됩니다. */
+}
+
+/* 이미지 미리보기 스타일: 박스 안에서 비율 유지하며 꽉 차게 */
+.upload-preview {
+    width: 100%;
+    height: 100%;
+    object-fit: contain; /* 이미지가 잘리지 않고 비율 유지하며 박스 안에 들어옴 */
+    /* 꽉 채우고 싶으면 object-fit: cover; 로 변경 */
+    display: block;
+}
+
+.upload-dropzone img:not(.upload-preview) {
+    width: 48px;
+    height: 48px;
+    margin-bottom: 16px;
+    opacity: 0.6;
+}
+
+.upload-dropzone p {
+    font-size: 18px;
+    font-weight: bold;
+    margin: 0 0 8px 0;
+    color: #333;
+}
+
+.upload-dropzone small {
+    font-size: 13px;
+    color: #777;
+}
+
+/* 업로드된 이미지 미리보기 */
+.upload-preview {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+
+/* --- 입력 영역 (왼쪽 하단) --- */
+.input-area {
+    grid-area: inputs;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.input-area .title {
+    font-size: 16px;
+    font-weight: bold;
+    margin-bottom: 8px;
+    color: #000;
+}
+
+/* 공통 입력창 스타일 */
+.Upload input[type="text"],
+.Upload select {
+    width: 100%;
+    padding: 12px 16px;
+    background-color: #e0e0e0;
+    border: none;
+    border-radius: 8px;
+    font-size: 15px;
+    box-sizing: border-box; /* 패딩 포함 크기 계산 */
+    outline: none;
+}
+
+.Upload input::placeholder {
+    color: #999;
+}
+
+/* --- 중앙 구분선 --- */
+.Upload hr {
+    grid-area: line;
+    width: 1px;
+    height: 100%;
+    background-color: #000; /* 검은색 선 */
+    border: none;
+    margin: 0 auto;
+}
+
+/* --- 카테고리 관리 영역 (오른쪽) --- */
+.category-management {
+    grid-area: category;
+    display: flex;
+    flex-direction: column;
+    gap: 40px; /* 각 그룹 간 간격 */
+    padding-top: 10px;
+}
+
+/* 카테고리 내부 각 섹션 */
+.category-management > div {
+    display: grid;
+    /* 라벨은 한 줄, 아래는 인풋과 버튼을 나란히 배치 */
+    grid-template-columns: 1fr auto;
+    row-gap: 8px;
+    column-gap: 10px;
+    align-items: center;
+}
+
+.category-management > div .title {
+    grid-column: 1 / -1; /* 타이틀은 전체 너비 사용 */
+    margin: 0;
+    font-size: 16px;
+    font-weight: bold;
+}
+
+/* 카테고리 관리 버튼 (갈색) */
+.category-management button {
+    background-color: #5d4037; /* 갈색 */
+    color: white;
+    border: none;
+    border-radius: 8px;
+    padding: 12px 20px; /* 인풋창 높이와 비슷하게 맞춤 */
+    font-weight: bold;
+    cursor: pointer;
+    white-space: nowrap;
+}
+
+.category-management button:hover {
+    background-color: #4e342e;
+}

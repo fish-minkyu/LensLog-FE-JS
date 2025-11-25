@@ -49,14 +49,9 @@ const Header = () => {
                 <>
                     <button
                         className="photo-upload-button"
-                        onClick={() => nav("/admin")}
+                        onClick={() => nav("/upload")}
                     >
-                        <img
-                            src={uploadImg}
-                            onClick={() => {
-                                nav("/upload");
-                            }}
-                        />
+                        <img src={uploadImg} alt="업로드 이미지 아이콘" />
                     </button>
                 </>
             )}

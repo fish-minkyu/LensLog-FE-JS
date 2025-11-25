@@ -50,7 +50,7 @@ label {
     top: 12px;
     color: #909090;
     font-size: 16px;
-    pointer-events: none;
+    /* pointer-events: none; */
     transition: all 0.2s ease;
 }
 
