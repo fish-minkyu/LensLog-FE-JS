@@ -128,7 +128,10 @@ const FindPasswordPage = () => {
             );
 
             if (response.status === 200) {
-                nav("/reset/password", { replace: true });
+                nav("/change/password", {
+                    replace: true,
+                    state: { username, email },
+                });
             }
         } catch (error) {
             console.error("비밀번호 찾기 에러: ", error);

@@ -39,12 +39,18 @@
     gap: 15px; /* 버튼 간격 */
 }
 
+.Modal .modal-content .modal-actions .modal-button {
+    cursor: pointer;
+}
+
 .modal-button.yes {
     background-color: #f44336; /* 붉은색 */
     border: none;
     color: white;
     font-size: 18px;
     font-weight: 500;
+    padding: 0px 20px;
+    cursor: pointer;
 }
 
 /* "닫기" 버튼 스타일 */

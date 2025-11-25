@@ -2,28 +2,28 @@
     font-family: "AppleSDGothicNeo";
     font-style: normal;
     font-weight: 100;
-    src: url("/public/AppleSDGothicNeo-Light.woff2") format("woff2");
+    src: url("/AppleSDGothicNeo-Light.woff2") format("woff2");
 }
 
 @font-face {
     font-family: "AppleSDGothicNeo";
     font-style: normal;
     font-weight: normal;
-    src: url("/public/AppleSDGothicNeo-Regular.woff2") format("woff2");
+    src: url("/AppleSDGothicNeo-Regular.woff2") format("woff2");
 }
 
 @font-face {
     font-family: "AppleSDGothicNeo";
     font-style: normal;
     font-weight: 500;
-    src: url("/public/AppleSDGothicNeo-Medium.woff2") format("woff2");
+    src: url("/AppleSDGothicNeo-Medium.woff2") format("woff2");
 }
 
 @font-face {
     font-family: "AppleSDGothicNeo";
     font-style: normal;
     font-weight: bold;
-    src: url("/public/AppleSDGothicNeo-Bold.woff2") format("woff2");
+    src: url("/AppleSDGothicNeo-Bold.woff2") format("woff2");
 }
 
 body * {
