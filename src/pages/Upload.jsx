@@ -9,7 +9,7 @@ const Upload = () => {
     const [file, setFile] = useState(null);
     const [previewUrl, setPreviewUrl] = useState("");
     const [location, setLocation] = useState("");
-    const [category, setCategory] = useState("");
+    const [categoryId, setCategoryId] = useState("");
     const [newCategory, setNewCategory] = useState("");
     const [editCategory, setEditCategory] = useState("");
     const [deleteCategory, setDeleteCategory] = useState("");
@@ -79,7 +79,7 @@ const Upload = () => {
         const formData = new FormData();
         formData.append("file", file);
         formData.append("location", location);
-        formData.append("category", category);
+        formData.append("categoryId", categoryId);
 
         try {
             await axios.post(API_ENDPOINTS.PHOTO.UPLOAD_PHOTO, formData, {
@@ -228,9 +228,9 @@ const Upload = () => {
 
                     <h4 className="title">카테고리</h4>
                     <select
-                        value={category}
+                        value={categoryId}
                         onChange={(e) => {
-                            setCategory(e.target.value);
+                            setCategoryId(e.target.value);
                         }}
                     >
                         <option value="">선택하세요.</option>
