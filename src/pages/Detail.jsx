@@ -63,7 +63,19 @@ const Detail = () => {
     const toggleLike = async () => {
         try {
             await axios.post(API_ENDPOINTS.GOOD.SAVE_LIKE(photoId));
+
+            // 좋아요 상태 토글
             setLiked((prev) => !prev);
+
+            // 사진 데이터의 좋아요 숫자 직접 업데이트
+            setPhoto((prevPhoto) => ({
+                ...prevPhoto,
+                likeCount: liked
+                    ? // 좋아요를 취소할 때
+                      prevPhoto.likeCount - 1
+                    : // 좋아요를 할 때
+                      prevPhoto.likeCount + 1,
+            }));
         } catch (error) {
             console.error("좋아요가 오류 났습니다.", error);
             if (error.response && error.response.status === 401) {
