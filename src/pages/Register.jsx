@@ -19,15 +19,17 @@ const Register = () => {
     // 비밀번호 visible
     const [passwordVisible, setPasswordVisible] = useState(false);
 
+    // 인증 요청 상태
+    // 버튼 상태, false: 인증 요청, true: 가입하기
+    const [isVerifiedRequested, setIsVerifiedRequested] = useState(false);
+
     // 에러 메시지 상태
     const [usernameErrorMsg, setUsernameErrorMsg] = useState("");
     const [nameErrorMsg, setNameErrorMsg] = useState("");
     const [passwordErrorMsg, setPasswordErrorMsg] = useState("");
     const [emailErrorMsg, setEmailErrorMsg] = useState("");
-
-    // 인증 요청 상태
-    // 버튼 상태, false: 인증 요청, true: 가입하기
-    const [isVerifiedRequested, setIsVerifiedRequested] = useState(false);
+    const [verifyErrosrMsg, setVerifyErrorMsg] = useState("");
+    const [joinErrorMsg, setJoinErrorMsg] = useState("");
 
     const nav = useNavigate();
 
@@ -126,6 +128,15 @@ const Register = () => {
         setEmailErrorMsg(message);
     };
 
+    // 핸들러: 인증번호
+    const handleVerificationCodeBlur = () => {
+        if (verifyCode.trim().length < 6) {
+            setVerifyErrorMsg("인증번호는 6자리입니다.");
+        } else {
+            setVerifyErrorMsg("");
+        }
+    };
+
     // ------------- 요청 함수 -------------
     // 인증 요청
     const handleRequestVerification = async () => {
@@ -193,6 +204,17 @@ const Register = () => {
             nav("/result/register", { replace: true });
         } catch (error) {
             console.error("회원가입 실패: ", error);
+            if (error.response && error.response.status === 401) {
+                setJoinErrorMsg(
+                    error.response.data.message || "회원가입에 실패했습니다."
+                );
+            }
+
+            if (error.response) {
+                setJoinErrorMsg(
+                    error.response.data.message || "회원가입에 실패했습니다."
+                );
+            }
         } finally {
             setIsLoading(false);
         }
@@ -239,16 +261,6 @@ const Register = () => {
     const emailErrors = [emailErrorMsg].filter(Boolean);
 
     // ------------ 버튼 활성화 조건 ------------
-    // 가입하기 버튼 활성화 조건
-    const isSignUpEnabled =
-        isVerifiedRequested &&
-        username.trim() !== "" &&
-        name.trim() !== "" &&
-        password.trim() !== "" &&
-        email.trim() !== "" &&
-        verifyCode.trim() !== "" &&
-        !userInfoErrors.length &&
-        !emailErrors.length;
 
     const buttonText = isVerifiedRequested ? "가입하기" : "인증 요청";
 
@@ -261,6 +273,18 @@ const Register = () => {
         !userInfoErrors.length &&
         !emailErrors.length;
 
+    // 가입하기 버튼 활성화 조건
+    const isSignUpEnabled =
+        isVerifiedRequested &&
+        username.trim() !== "" &&
+        name.trim() !== "" &&
+        password.trim() !== "" &&
+        email.trim() !== "" &&
+        verifyCode.trim() !== "" &&
+        !userInfoErrors.length &&
+        !emailErrors.length &&
+        !verifyErrosrMsg.length;
+
     // 최종 버튼 비활성화 조건: 로딩 중이거나, 로딩 중이 아니면서 버튼이 활성화될 조건을 충족하지 못한 경우
     const isButtonDisabled =
         isLoading ||
@@ -271,7 +295,6 @@ const Register = () => {
         <>
             <div className="Register">
                 <LogoHeader />
-
                 <div className="user-info-wrapper">
                     {/* 아이디 입력 그룹 */}
                     <div className="input-group">
@@ -373,7 +396,6 @@ const Register = () => {
                         </div>
                     )}
                 </div>
-
                 <div className="email-wrapper">
                     {/* 이메일 입력 그룹 */}
                     <div className="input-group">
@@ -404,6 +426,7 @@ const Register = () => {
                         <input
                             id="auth-number"
                             className="authentication-number"
+                            onBlur={handleVerificationCodeBlur}
                             maxLength={6}
                             onChange={(e) => {
                                 setVerifyCode(e.target.value);
@@ -413,6 +436,12 @@ const Register = () => {
                         />
                         <label htmlFor="auth-number">인증번호 6자리 입력</label>
                     </div>
+                    {/* 인증번호 6자리 미만 시 에러 메시지 */}
+                    {verifyErrosrMsg && (
+                        <div className="error-message">
+                            <p>{verifyErrosrMsg}</p>
+                        </div>
+                    )}
 
                     {/* 이메일 에러 메시지 그룹화 및 표시 (인증번호 input 아래) */}
                     {emailErrors.length > 0 && (
@@ -428,7 +457,6 @@ const Register = () => {
                         </div>
                     )}
                 </div>
-
                 {/* 인증 메일 전송 성공 시 보여줄 메시지와 타이머 */}
                 {isVerifiedRequested && (
                     <div className="verification-messasge">
@@ -440,7 +468,12 @@ const Register = () => {
                         </span>
                     </div>
                 )}
-
+                {/* 회원가입 실패 시, 보여줄 메시지 */}
+                {joinErrorMsg && (
+                    <div className="error-message">
+                        <p>{joinErrorMsg}</p>
+                    </div>
+                )}
                 <button
                     className={`register-btn ${isLoading ? "loading" : ""}`}
                     onClick={handleButtonClick}

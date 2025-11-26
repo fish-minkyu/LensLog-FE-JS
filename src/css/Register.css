@@ -62,7 +62,7 @@
 }
 
 .register-btn:hover:not(:disabled) {
-    background-color: #434190;
+    background-color: #1d5f10;
 }
 
 .register-btn:disabled {
