@@ -1,13 +1,9 @@
-/* 1. 전체 컨테이너: 중앙 정렬 및 여백만 담당 */
-.Upload {
+/* 실제 그리드 레이아웃은 여기서 정의  */
+.upload-body {
     max-width: 1200px;
-    margin: 0 auto;
     padding: 40px 20px;
     box-sizing: border-box;
-}
-
-/* 2. 실제 그리드 레이아웃은 여기서 정의  */
-.upload-body {
+    margin: 0 auto;
     display: grid;
     grid-template-columns: 1fr 1px 1fr; /* 왼쪽(1) | 구분선(1px) | 오른쪽(1) */
     column-gap: 60px;

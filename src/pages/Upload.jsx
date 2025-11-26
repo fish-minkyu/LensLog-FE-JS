@@ -14,7 +14,23 @@ const Upload = () => {
     const [editCategory, setEditCategory] = useState("");
     const [deleteCategory, setDeleteCategory] = useState("");
 
-    const [message, setMessage] = useState("");
+    const [categoryList, setCategoryList] = useState([]);
+
+    // 카테고리 목록 조회 함수
+    const getCategoryList = async () => {
+        try {
+            const response = await axios.get(
+                API_ENDPOINTS.CATEGORY.GET_CATEGORY_LIST
+            );
+            setCategoryList(response.data);
+        } catch (error) {
+            console.error("카테고리 목록 조회 오류: ", error);
+        }
+    };
+
+    useEffect(() => {
+        getCategoryList();
+    }, []);
 
     // 파일 선택 or 드래그 드롭 처리
     const onFileChange = (e) => {
@@ -83,18 +99,75 @@ const Upload = () => {
                 API_ENDPOINTS.CATEGORY.MAKE_CATEGORY,
                 { categoryName: newCategory }
             );
-            //TODO 카테고리 생성 input 하단에 message 띄우기
-            // 그 후, 다른 곳 클릭하면 메시지 사라지기
+
+            if (response.status === 200) {
+                alert("카테고리 생성 완료");
+                setNewCategory("");
+                await getCategoryList();
+            }
         } catch (error) {
             console.error("카테고리 생성 오류: ", error);
+            alert("카테고리 생성에 실패했습니다. 콘솔창을 확인하세요.");
         }
     };
 
     // 카테고리 수정
-    const onUpdateCategory = async () => {};
+    const onUpdateCategory = async () => {
+        try {
+            if (!editCategory) {
+                alert("수정할 카테고리를 선택해주세요.");
+                return;
+            }
+
+            // 사용자에게 확인 요청
+            if (!window.confirm("정말로 이 카테고리를 수정하시겠습니까?")) {
+                return;
+            }
+
+            const response = await axios.put(
+                API_ENDPOINTS.CATEGORY.UPDATE_CATEGORY(editCategory.categoryId)
+            );
+
+            if (response.status === 200) {
+                alert("카테고리 수정 완료");
+                setEditCategory("");
+                await getCategoryList();
+            }
+        } catch (error) {
+            console.error("카테고리 생성 오류: ", error);
+            alert("카테고리 수정에 실패했습니다. 콘솔창을 확인하세요.");
+        }
+    };
 
     // 카테고리 삭제
-    const onDeleteCategory = async () => {};
+    const onDeleteCategory = async () => {
+        try {
+            if (!deleteCategory) {
+                alert("삭제할 카테고리를 선택해주세요.");
+                return;
+            }
+
+            // 사용자에게 확인 요청
+            if (!window.confirm("정말로 이 카테고리를 삭제하시겠습니까?")) {
+                return;
+            }
+
+            const response = await axios.delete(
+                API_ENDPOINTS.CATEGORY.DELETE_CATEGORY(
+                    deleteCategory.categoryId
+                )
+            );
+
+            if (response.status === 200) {
+                alert("카테고리 삭제 완료");
+                setDeleteCategory("");
+                await getCategoryList();
+            }
+        } catch (error) {
+            console.error("카테고리 생성 오류: ", error);
+            alert("카테고리 삭제에 실패했습니다. 콘솔창을 확인하세요.");
+        }
+    };
 
     return (
         <div className="Upload">
@@ -154,7 +227,6 @@ const Upload = () => {
                     />
 
                     <h4 className="title">카테고리</h4>
-                    {/* 카테고리 리스트 가지고 와서 여기다 넣어주기 */}
                     <select
                         value={category}
                         onChange={(e) => {
@@ -162,6 +234,11 @@ const Upload = () => {
                         }}
                     >
                         <option value="">선택하세요.</option>
+                        {categoryList.map((cat) => (
+                            <option key={cat.categoryId} value={cat.categoryId}>
+                                {cat.categoryName}
+                            </option>
+                        ))}
                     </select>
                 </div>
 
@@ -189,6 +266,14 @@ const Upload = () => {
                             }}
                         >
                             <option value="">선택하세요.</option>
+                            {categoryList.map((cat) => (
+                                <option
+                                    key={cat.categoryId}
+                                    value={cat.categoryId}
+                                >
+                                    {cat.categoryName}
+                                </option>
+                            ))}
                         </select>
                         <button onClick={onUpdateCategory}>확인</button>
                     </div>
@@ -199,6 +284,14 @@ const Upload = () => {
                             onChange={(e) => setDeleteCategory(e.target.value)}
                         >
                             <option value="">선택하세요.</option>
+                            {categoryList.map((cat) => (
+                                <option
+                                    key={cat.categoryId}
+                                    value={cat.categoryId}
+                                >
+                                    {cat.categoryName}
+                                </option>
+                            ))}
                         </select>
                         <button onClick={onDeleteCategory}>확인</button>
                     </div>
