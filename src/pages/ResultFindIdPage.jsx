@@ -1,6 +1,9 @@
 import "../css/ResultFindIdPage.css";
 import { useLocation, useNavigate } from "react-router-dom";
 import LogoHeader from "../components/LogoHeader";
+import kakao from "../assets/social-kakao.svg";
+import google from "../assets/social-google.svg";
+import naver from "../assets/social-naver.svg";
 
 // 아이디 찾기 결과 화면
 const ResultFindIdPage = () => {
@@ -34,21 +37,33 @@ const ResultFindIdPage = () => {
         if (user.provider === "kakao") {
             return (
                 <div className="social-box">
-                    <span className="kakao-icon">K</span>
+                    <img
+                        className="social-icon"
+                        src={kakao}
+                        alt="카카오 아이콘"
+                    />
                     <span>간편 로그인</span>
                 </div>
             );
         } else if (user.provider === "naver") {
             return (
                 <div className="social-box">
-                    <span className="naver-icon">N</span>
+                    <img
+                        className="social-icon"
+                        src={naver}
+                        alt="네이버 아이콘"
+                    />
                     <span>간편 로그인</span>
                 </div>
             );
         } else if (user.provider === "google") {
             return (
                 <div className="social-box">
-                    <span className="google-icon">G</span>
+                    <img
+                        className="social-icon"
+                        src={google}
+                        alt="구글 아이콘"
+                    />
                     <span>간편 로그인</span>
                 </div>
             );
