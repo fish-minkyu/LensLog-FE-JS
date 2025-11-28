@@ -1,3 +1,21 @@
 .Home .body-container {
     margin: 0 260px;
 }
+
+@media screen and (max-width: 1500px) {
+    .Home .body-container {
+        margin: 0 180px;
+    }
+}
+
+@media screen and (max-width: 1200px) {
+    .Home .body-container {
+        margin: 0 100px;
+    }
+}
+
+@media screen and (max-width: 500px) {
+    .Home .body-container {
+        margin: 0 20px;
+    }
+}

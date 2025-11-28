@@ -26,6 +26,13 @@
     src: url("/AppleSDGothicNeo-Bold.woff2") format("woff2");
 }
 
+* {
+    margin: 0;
+    padding: 0;
+    overflow-x: hidden; /* 가로 넘침 방지 */
+    box-sizing: border-box;
+}
+
 body * {
     font-family: "AppleSDGothicNeo";
 }

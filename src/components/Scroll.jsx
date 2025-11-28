@@ -122,6 +122,9 @@ const Scroll = ({ categoryId }) => {
 
     const breakpointColumnsObj = {
         default: 5,
+        1500: 4,
+        1200: 3,
+        800: 2,
     };
 
     return (

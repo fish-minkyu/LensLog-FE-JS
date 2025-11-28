@@ -1,18 +1,29 @@
 .Scroll .masonry-grid {
     display: flex;
-    margin-left: -10px;  /* 칼럼 간 간격 보정용 */
-    width: auto;
-  }
-  
-  .Scroll .masonry-grid-column {
-    padding-left: 10px;  /* 칼럼 간 gutter */
+    margin-left: -10px; /* 칼럼 간 간격 보정용 */
+    width: 100%;
+}
+
+.Scroll .masonry-grid-column {
+    padding-left: 10px; /* 칼럼 간 gutter */
     background-clip: padding-box;
-  }
-  
-  .Scroll .masonry-grid img {
-    width: 100%;          /* 칼럼 너비에 맞춤 */
-    display: block;       /* 하단 공백 제거 */
-    margin-bottom: 10px;  /* 아이템 간 세로 간격 */
+}
+
+.Scroll .masonry-grid img {
+    width: 100%; /* 칼럼 너비에 맞춤 */
+    display: block; /* 하단 공백 제거 */
+    margin-bottom: 10px; /* 아이템 간 세로 간격 */
     border-radius: 5px;
-    object-fit: cover;    /* 이미지 비율 유지하며 꽉 채우기 */
-  }
+    object-fit: cover; /* 이미지 비율 유지하며 꽉 채우기 */
+}
+
+@media screen and (max-width: 500px) {
+    .Scroll {
+        margin: 0 auto;
+    }
+
+    .Scroll .masonry-grid-column {
+        padding-left: 10px; /* 칼럼 간 gutter */
+        background-clip: padding-box;
+    }
+}
