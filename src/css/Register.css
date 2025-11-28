@@ -1,5 +1,10 @@
+/* Register.css */
+
 .Register {
+    /* 반응형을 위해 width를 %로 변경하고 최대 폭을 제한합니다 */
+    width: 90%;
     max-width: 620px;
+
     box-sizing: border-box;
     margin: 80px auto;
     border-radius: 12px;
@@ -10,10 +15,18 @@
     flex-direction: column;
     align-items: center;
     padding: 40px 20px;
+
+    /* 콘텐츠가 넘치지 않도록 설정 */
+    overflow: hidden;
 }
 
-.Register .email-wrapper {
-    margin-top: 20px;
+/* 래퍼들이 부모 너비를 따라가도록 설정 */
+.user-info-wrapper,
+.email-wrapper {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* 내부 input들을 가운데 정렬 */
 }
 
 .user-info-wrapper {
@@ -22,31 +35,44 @@
 }
 
 .email-wrapper {
+    /* margin-top은 상황에 따라 제거하거나 유지 */
+    /* margin-top: 20px; */
     padding-bottom: 25px;
 }
 
+/* --- [중요] Input 그룹 반응형 처리 --- */
 .input-group {
     position: relative;
     margin-bottom: 25px;
-    width: 380px;
+
+    /* 고정 폭(380px)을 제거하고, 100%로 설정하되 최대 크기를 제한 */
+    width: 100%;
+    max-width: 380px;
 }
 
 .input-container {
     position: relative;
+    width: 100%; /* 부모(.input-group) 크기에 맞춤 */
 }
 
 .password-visible-icon {
     position: absolute;
     right: 8px;
-    top: 25%;
+    top: 50%; /* 25% -> 50%로 변경 후 transform으로 중앙 정렬 추천 */
+    transform: translateY(-50%);
     width: 24px;
     height: 24px;
     z-index: 10;
-    opacity: 0.7; /* 살짝 투명하게 하여 UI 요소처럼 보이게 함 */
+    opacity: 0.7;
+    cursor: pointer; /* 클릭 가능 표시 */
 }
 
+/* --- [중요] 버튼 반응형 처리 --- */
 .register-btn {
-    width: 380px;
+    /* 고정 폭 제거 */
+    width: 100%;
+    max-width: 380px;
+
     padding: 12px 20px;
     font-size: 18px;
     font-weight: bold;
@@ -54,11 +80,11 @@
     border-radius: 10px;
     cursor: pointer;
     margin-top: 30px;
-    background-color: green; /* Primary Color */
+    background-color: green;
     color: white;
     transition: background-color 0.3s ease;
-    position: relative; /* 스피너 위치 기준점 */
-    height: 50px; /* 높이 고정 (로딩 시 찌그러짐 방지) */
+    position: relative;
+    height: 50px;
 }
 
 .register-btn:hover:not(:disabled) {
@@ -71,9 +97,7 @@
     color: #666;
 }
 
-/* ------------------------------------------------------- */
-/* 에러 발생 시 스타일 */
-/* ------------------------------------------------------- */
+/* 에러 스타일 */
 .input-error {
     border-color: red !important;
 }
@@ -82,12 +106,14 @@
     color: red !important;
 }
 
-/* 그룹화된 에러 메시지 스타일 */
 .error-messages-group {
     width: 100%;
+    /* 텍스트가 왼쪽 정렬되도록 하거나 중앙 정렬 선택 */
+    max-width: 380px;
     margin-top: -15px;
     margin-bottom: 10px;
     padding: 5px 0 5px 2px;
+    box-sizing: border-box; /* 패딩 포함 크기 계산 */
 }
 
 .error-message {
@@ -97,41 +123,46 @@
     padding-top: 2px;
     user-select: none;
     position: relative;
+    word-break: keep-all; /* 모바일에서 단어 단위로 줄바꿈 */
 }
 
-/* ------------------------------------------------------- */
-/* Success Message & Timer Styling                         */
-/* ------------------------------------------------------- */
-.verification-message {
-    margin-top: -15px; /* input-group margin 상쇄 */
+/* 인증 메시지 스타일 */
+.verification-messasge {
+    /* 오타 수정 제안: messasge -> message */
+    margin-top: -15px;
     margin-bottom: 15px;
     font-size: 14px;
     display: flex;
-    justify-content: flex-start;
+    justify-content: flex-start; /* 혹은 space-between */
     align-items: baseline;
+
     width: 100%;
+    max-width: 380px; /* 인풋 크기와 맞춤 */
+
     padding: 0 2px;
     box-sizing: border-box;
 }
 
 .success-text {
-    color: green; /* Green color */
+    color: green;
     font-weight: 500;
+    line-height: 1.4; /* 모바일에서 두 줄 될 경우 대비 */
 }
 
 .timer-text {
-    margin-left: 4px;
-    color: green; /* Red color for urgency, or use green/gray */
+    margin-left: auto; /* 타이머를 우측 끝으로 밀고 싶다면 사용 */
+    padding-left: 10px;
+    color: green;
     font-weight: bold;
-    font-family: monospace; /* 고정폭 글꼴로 숫자 흔들림 방지 */
+    font-family: monospace;
+    white-space: nowrap; /* 줄바꿈 방지 */
 }
 
-/* 로딩 중일 때 텍스트 숨기기 */
+/* 로딩 스피너 등 기타 스타일 유지 */
 .register-btn.loading .button-content {
     visibility: hidden;
 }
 
-/* 로딩 중일 때 배경색 */
 .register-btn.loading {
     background-color: #6c757d;
     color: transparent;
@@ -144,13 +175,11 @@
     width: 24px;
     height: 24px;
     animation: spin 1s linear infinite;
-
-    /* 버튼 중앙 정렬 */
     position: absolute;
     top: 50%;
     left: 50%;
-    margin-top: -12px; /* height의 절반 */
-    margin-left: -12px; /* width의 절반 */
+    margin-top: -12px;
+    margin-left: -12px;
 }
 
 @keyframes spin {
@@ -159,5 +188,30 @@
     }
     100% {
         transform: rotate(360deg);
+    }
+}
+
+/* ------------------------------------------------------- */
+/* [추가] 모바일 반응형 미디어 쿼리 */
+/* ------------------------------------------------------- */
+@media screen and (max-width: 480px) {
+    .Register {
+        width: 100%; /* 모바일에서는 꽉 차게 */
+        margin: 0; /* 상하 여백 제거 (혹은 줄임) */
+        border-radius: 0; /* 모바일에서는 둥근 모서리 제거하거나 줄임 */
+        box-shadow: none; /* 모바일에서는 그림자 제거하여 깔끔하게 */
+        padding: 20px; /* 패딩 축소 */
+        min-height: 100vh; /* 화면 전체 높이 사용 */
+        justify-content: center; /* 세로 중앙 정렬 */
+    }
+
+    .input-group,
+    .register-btn {
+        max-width: 100%; /* 모바일에서는 최대 폭 제한을 풂 */
+    }
+
+    .logo-header {
+        /* 로고 헤더가 있다면 */
+        margin-bottom: 20px;
     }
 }
