@@ -1,13 +1,60 @@
 .Button {
     border: none;
+    box-sizing: border-box; /* 테두리/패딩 포함 크기 계산 */
+    display: flex; /* 텍스트/아이콘 중앙 정렬을 위해 Flexbox 사용 */
+    justify-content: center;
+    align-items: center;
+    transition: background-color 0.2s ease, transform 0.1s ease;
 }
 
+/* --- LOGIN 타입 버튼 스타일 --- */
 .Button_LOGIN {
     background-color: black;
     border-radius: 5px;
     color: white;
-    width: 400px;
+
+    /* 반응형 너비 설정 */
+    width: 100%;
+    max-width: 400px; /* 데스크탑에서 너무 커지지 않도록 제한 */
+
     height: 50px;
-    font-size: 24px;
+    font-size: 18px;
+    font-weight: bold;
     cursor: pointer;
+}
+
+/* 호버 효과 */
+.Button_LOGIN:hover:not(:disabled) {
+    background-color: #333; /* 약간 밝은 검정 */
+}
+
+/* 비활성화 상태 (disabled) */
+.Button:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+    color: #666;
+}
+
+/* 클릭 효과 (눌림) */
+.Button:active:not(:disabled) {
+    transform: scale(0.98);
+}
+
+/* ------------------------------------------------------- */
+/* 모바일 반응형 미디어 쿼리 */
+/* ------------------------------------------------------- */
+@media screen and (max-width: 480px) {
+    .Button_LOGIN {
+        /* [핵심 수정] 모바일에서 폼의 90% 너비를 사용하여 
+           Login.css에서 .login-form에 적용된 패딩과 무관하게 
+           버튼이 화면 중앙에 오도록 함. */
+        width: 90%;
+        max-width: none; /* 최대 너비 제한 해제 */
+
+        height: 48px;
+        font-size: 16px;
+
+        /* 중앙 정렬 보장 */
+        display: flex;
+    }
 }

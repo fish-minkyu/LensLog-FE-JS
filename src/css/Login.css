@@ -1,17 +1,29 @@
 .Login {
-    max-width: 620px; /* 컨테이너 최대 너비 설정 */
-    box-sizing: border-box; /* max-width가 패딩과 보더를 포함한 전체 박스 너비 */
-    margin: 200px auto; /* 중앙 정렬 및 상단 여백 */
-    padding: 20px;
+    /* 반응형을 위해 너비를 %로 설정하고 최대 너비를 제한 */
+    width: 90%;
+    max-width: 620px;
+
+    box-sizing: border-box;
+    /* 상단 여백은 화면 크기에 따라 조금 줄이는 것이 좋으나 일단 유지하되 미디어 쿼리에서 조정 */
+    margin: 100px auto; /* 200px은 너무 넓을 수 있어 100px로 조정 추천 */
+
+    padding: 40px 20px; /* 패딩을 조금 더 넉넉하게 */
     border-radius: 12px;
     background-color: #fff;
     text-align: center;
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+
+    /* 세로 중앙 정렬을 위한 설정 (선택사항) */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
 .Login .login-form {
-    max-width: 400px; /* 로그인 버튼 너비와 일치시키기 위해 명시적으로 너비 설정 */
-    margin: 0 auto; /* 중앙 정렬 */
+    /* 폼 전체 너비를 유동적으로, 최대 400px 제한 */
+    width: 100%;
+    max-width: 400px;
+    margin: 0 auto;
 }
 
 .Login .login-form .input-group {
@@ -22,12 +34,13 @@
 
 .Login .login-form .input-group input {
     width: 100%;
-    padding: 12px 36px 8px 8px; /* 아이콘이 들어갈 공간 (오른쪽 패딩 36px) */
+    padding: 12px 36px 8px 8px;
     border: none;
     border-bottom: 2px solid black;
     outline: none;
     font-size: 16px;
     box-sizing: border-box;
+    background: transparent; /* 배경 투명 (필요 시) */
 }
 
 .Login .login-form .input-group label {
@@ -48,11 +61,11 @@
     cursor: pointer;
     width: 24px;
     height: 24px;
-    z-index: 10; /* 입력 필드 위에 표시 */
-    opacity: 0.7; /* 살짝 투명하게 하여 UI 요소처럼 보이게 함 */
+    z-index: 10;
+    opacity: 0.7;
 }
 
-/* 입력한 포커스 혹은 내용이 있을 때 */
+/* 입력 필드 포커스 및 내용 있을 때 라벨 이동 */
 .Login .login-form .input-group input:focus + label,
 .Login .login-form .input-group input:not(:placeholder-shown) + label {
     top: -8px;
@@ -70,16 +83,23 @@
 
 .login-form .link-button {
     text-align: left;
-    width: 100%; /* 로그인 버튼과 너비 같게 */
-    margin-top: 8px;
+    width: 100%;
+    margin-top: 15px; /* 간격 조금 확보 */
+    font-size: 14px; /* 폰트 사이즈 조정 */
+
+    /* 모바일에서 줄바꿈이 일어날 경우를 대비한 플렉스 처리 (선택) */
+    display: flex;
+    justify-content: flex-start; /* 혹은  space-between */
+    flex-wrap: wrap;
 }
 
 .login-form .error-message {
     color: red;
     font-size: 14px;
-    margin-top: -20px;
-    margin-bottom: 12px;
+    margin-top: -10px;
+    margin-bottom: 20px;
     text-align: left;
+    word-break: keep-all;
 }
 
 .link-button a,
@@ -87,9 +107,9 @@
 .link-button a:active,
 .link-button a:hover {
     color: #909090;
-    text-decoration: none; /* 필요에 따라 밑줄 제거 */
+    text-decoration: none;
     cursor: pointer;
-    user-select: none; /* 선택 방지로 깔끔한 UX 가능 */
+    user-select: none;
 }
 
 .link-button .separator {
@@ -98,33 +118,77 @@
     user-select: none;
 }
 
+/* [중요] 구분선 반응형 처리 */
 .Login .underline {
-    border: none; /* 기본 보더 제거 */
-    width: 500px;
-    border-top: 2px solid black; /* 얇은 상단 보더로 구분선 역할 */
-    margin: 30px auto; /* 위아래 여백 */
+    border: none;
+    /* 고정 500px 제거 -> 부모 너비에 맞추되 최대 500px */
+    width: 100%;
+    max-width: 500px;
+
+    border-top: 2px solid black;
+    margin: 30px auto;
 }
 
 .social-login {
     margin-top: 20px;
-
     display: flex;
-    justify-content: center; /* 버튼들을 가운데 정렬 */
+    justify-content: center;
     gap: 20px;
+
+    /* 모바일에서 아이콘들이 너무 크면 줄어들도록 설정 */
+    width: 100%;
+    flex-wrap: wrap;
 }
 
 .social-login .social-button {
     border: none;
     background-color: white;
     cursor: pointer;
-
     display: flex;
-    justify-content: center; /* 가운데 정렬 */
+    justify-content: center;
     align-items: center;
+    padding: 0; /* 버튼 기본 패딩 제거 */
 }
 
 .social-login .social-button > img {
-    width: 80%;
+    width: 50px; /* 고정 크기 혹은 반응형 크기 설정 */
+    height: 50px;
     border-radius: 50%;
-    object-fit: contain; /* 이미지 비율 유지하며 버튼 내부에 포함 */
+    object-fit: contain;
+}
+
+/* ------------------------------------------------------- */
+/* [추가] 모바일 반응형 미디어 쿼리 */
+/* ------------------------------------------------------- */
+@media screen and (max-width: 480px) {
+    .Login {
+        width: 100%;
+        max-width: none; /* 최대 너비 해제 */
+        margin: 0 auto; /* 상하 여백 제거 (전체 화면 모드) */
+        min-height: 100vh; /* 화면 꽉 차게 */
+        border-radius: 0; /* 둥근 모서리 제거 */
+        box-shadow: none; /* 그림자 제거 */
+        justify-content: center; /* 내용 중앙 정렬 */
+    }
+
+    .Login .login-form {
+        max-width: 100%; /* 폼 너비 꽉 차게 */
+        padding: 0 10px; /* 내부 여백 추가 */
+    }
+
+    .Login .login-form .input-group {
+        width: 90%; /* 폼 너비 꽉 차게 */
+    }
+
+    .Login .link-button {
+        width: 90%;
+    }
+
+    .Login .underline {
+        width: 90%; /* 모바일에서 구분선 길이 조정 */
+    }
+
+    .link-button {
+        justify-content: center; /* 링크 버튼들 중앙 정렬 */
+    }
 }
