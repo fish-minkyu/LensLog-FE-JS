@@ -1,5 +1,6 @@
 import "../css/Register.css";
 import { useEffect, useState } from "react";
+import { useForm } from "react-hook-form"; // 👈 useForm 훅 임포트
 import LogoHeader from "../components/LogoHeader";
 import eyeOpen from "../assets/open-eye-gray.svg";
 import eyeClosed from "../assets/closed-eye-gray.svg";
@@ -7,34 +8,42 @@ import axios from "axios";
 import API_ENDPOINTS from "../constants/api";
 import { useNavigate } from "react-router-dom";
 
+// 비밀번호 유효성 검사 정규식 (최소 8자, 영문 대문자 1개 이상, 특수문자 1개 이상)
+const passwordRegex = /^(?=.*[A-Z])(?=.*[!@#$%^&*(),.?":{}|<>]).{8,}$/;
+
 const Register = () => {
-    // 상태 관리
-    const [username, setUsername] = useState(""); // 아이디
-    const [name, setName] = useState("");
-    const [password, setPassword] = useState("");
-    const [email, setEmail] = useState("");
-    const [verifyCode, setVerifyCode] = useState("");
-    const [isLoading, setIsLoading] = useState(false); // 로딩 상태 추가
-
-    // 비밀번호 visible
-    const [passwordVisible, setPasswordVisible] = useState(false);
-
-    // 인증 요청 상태
-    // 버튼 상태, false: 인증 요청, true: 가입하기
-    const [isVerifiedRequested, setIsVerifiedRequested] = useState(false);
-
-    // 에러 메시지 상태
-    const [usernameErrorMsg, setUsernameErrorMsg] = useState("");
-    const [nameErrorMsg, setNameErrorMsg] = useState("");
-    const [passwordErrorMsg, setPasswordErrorMsg] = useState("");
-    const [emailErrorMsg, setEmailErrorMsg] = useState("");
-    const [verifyErrosrMsg, setVerifyErrorMsg] = useState("");
-    const [joinErrorMsg, setJoinErrorMsg] = useState("");
+    // 폼 상태, 유효성 검사, 제출 처리를 위한 useForm 훅 사용
+    const {
+        register,
+        handleSubmit,
+        watch,
+        setValue, // 필드 값 강제 설정 함수
+        setError, // 에러 강제 설정 함수
+        clearErrors, // 에러 제거 함수
+        formState: { errors, isValid, isSubmitting }, // 에러, 유효성 상태, 제출 중 상태
+    } = useForm({
+        mode: "onBlur", // 포커스가 해제될 때 유효성 검사
+        defaultValues: {
+            username: "",
+            name: "",
+            password: "",
+            email: "",
+            verifyCode: "",
+        },
+    });
 
     const nav = useNavigate();
 
-    // 타이머 상태(초 단위, 300초)
-    const [timeLeft, setTimeLeft] = useState(300);
+    // 로컬 상태 관리 유지: 이메일 인증 관련
+    const [isLoading, setIsLoading] = useState(false);
+    const [passwordVisible, setPasswordVisible] = useState(false);
+    const [isVerifiedRequested, setIsVerifiedRequested] = useState(false); // 버튼 상태: false: 인증 요청, true: 가입하기
+    const [joinErrorMsg, setJoinErrorMsg] = useState(""); // 최종 회원가입 에러 메시지
+    const [timeLeft, setTimeLeft] = useState(300); // 타이머 상태
+
+    // watch로 폼 필드 값 실시간 감시 (인증 버튼 활성화/비활성화 로직에 필요)
+    const emailValue = watch("email");
+    const verifyCodeValue = watch("verifyCode");
 
     // 타이머 로직: 인증 요청 상태이고 시간이 남아있을 때 작동
     useEffect(() => {
@@ -43,18 +52,30 @@ const Register = () => {
             timerId = setInterval(() => {
                 setTimeLeft((prevTime) => prevTime - 1);
             }, 1000);
-        } else if (timeLeft == 0) {
-            // 시간이 다 되었을 때의 로직
+        } else if (timeLeft === 0) {
+            // 시간이 다 되면 인증 상태 초기화
             clearInterval(timerId);
+            setIsVerifiedRequested(false);
+            // 필요하다면 에러 메시지 설정
+            setError("verifyCode", {
+                type: "expired",
+                message: "인증 시간이 초과되었습니다. 다시 요청해주세요.",
+            });
         }
 
         return () => clearInterval(timerId);
-    }, [isVerifiedRequested, timeLeft]);
+    }, [isVerifiedRequested, timeLeft, setError]);
 
-    // 필수 정보 검사 함수
-    const validateRequired = (value, fieldName) => {
-        return value.trim() === "" ? `${fieldName}: 필수정보입니다.` : "";
-    };
+    // 이메일 변경 시 인증 상태 및 타이머 초기화
+    useEffect(() => {
+        if (isVerifiedRequested) {
+            setIsVerifiedRequested(false);
+            setTimeLeft(300);
+            clearErrors("verifyCode"); // 인증번호 관련 에러 메시지 제거
+            // 인증번호 필드 값도 초기화할 수 있음
+            // setValue("verifyCode", "");
+        }
+    }, [emailValue]); // 이메일 값이 변경될 때마다 실행
 
     // 시간을 MM:SS 형식으로 변환하는 함수
     const formatTime = (seconds) => {
@@ -65,235 +86,148 @@ const Register = () => {
         }${remainingSeconds}`;
     };
 
-    // 비밀번호 유효성 검사 정규식
-    // 최소 8자, 영문 대문자 1개 이상, 득수문자 1개 이상
-    const passwordRegex = /^(?=.*[A-Z])(?=.*[!@#$%^&*(),.?":{}|<>]).{8,}$/;
-
-    // 비밀번호 유효성 검사
-    const validatePassword = (pwd) => {
-        if (!pwd) {
-            return "비밀번호: 필수정보입니다.";
-        }
-        if (!passwordRegex.test(pwd)) {
-            return "비밀번호: 최소 8자의 영문 대/소문자, 숫자, 특수문자를 사용해주세요.";
-        }
-
-        return "";
-    };
-
-    // -------------- 핸들러 --------------
-    // 핸들러: 아이디
-    const handleUsernameChange = (e) => {
-        setUsername(e.target.value);
-        setUsernameErrorMsg(""); // 입력 시 에러 메시지 숨김
-    };
-    const handleUsernameBlur = () => {
-        const message = validateRequired(username, "아이디");
-        setUsernameErrorMsg(message); // 포커스 해제 시 검사
-    };
-
-    // 핸들러: 이름
-    const handleNameChange = (e) => {
-        setName(e.target.value);
-        setNameErrorMsg(""); // 입력 시 에러 메시지 숨김
-    };
-    const handleNameBlur = () => {
-        const message = validateRequired(name, "이름");
-        setNameErrorMsg(message);
-    };
-
-    // 핸들러: 비밀번호
-    const handlePasswordChange = (e) => {
-        setPassword(e.target.value);
-        if (passwordErrorMsg) {
-            setPasswordErrorMsg("");
-        }
-    };
-    const handlePasswordBlur = () => {
-        const message = validatePassword(password);
-        setPasswordErrorMsg(message);
-    };
-
-    // 핸들러: 이메일
-    const handleEmailChange = (e) => {
-        setEmail(e.target.value);
-        setEmailErrorMsg("");
-        // 이메일 변경 시 인증 상태 초기화
-        if (isVerifiedRequested) {
-            setIsVerifiedRequested(false);
-        }
-    };
-    const handleEmailBlur = () => {
-        const message = validateRequired(email, "이메일");
-        setEmailErrorMsg(message);
-    };
-
-    // 핸들러: 인증번호
-    const handleVerificationCodeBlur = () => {
-        if (verifyCode.trim().length < 6) {
-            setVerifyErrorMsg("인증번호는 6자리입니다.");
-        } else {
-            setVerifyErrorMsg("");
-        }
-    };
-
     // ------------- 요청 함수 -------------
-    // 인증 요청
+
+    // 인증 요청 (폼 제출과 별개로 작동)
     const handleRequestVerification = async () => {
-        if (email.trim() === "") {
-            setEmailErrorMsg("이메일: 필수정보입니다.");
+        // 이메일 유효성 검사 (required, pattern)는 register 룰에 의해 자동으로 수행되지만,
+        // 이 버튼은 handleSubmit 외부에서 호출되므로, watch와 errors를 이용해 수동 검사
+        if (errors.email) {
             return;
         }
 
-        setIsLoading(true); // 로딩 시작
+        setIsLoading(true);
 
         try {
-            await axios.post(API_ENDPOINTS.EMAIL.SEND_EMAIL, { email });
-            setIsVerifiedRequested(true);
+            await axios.post(API_ENDPOINTS.EMAIL.SEND_EMAIL, {
+                email: emailValue,
+            });
+            setIsVerifiedRequested(true); // 인증 상태 변경
+            setTimeLeft(300); // 타이머 재설정
+            clearErrors("verifyCode"); // 에러 초기화
         } catch (error) {
             console.error("인증 메일 발송 실패: ", error);
+            // 서버에서 받은 에러 메시지 처리
+            setError("email", {
+                type: "server",
+                message:
+                    error.response?.data?.message ||
+                    "인증 메일 발송에 실패했습니다.",
+            });
         } finally {
-            setIsLoading(false); // 로딩 종료 (성공 / 실패 모두)
+            setIsLoading(false);
         }
     };
 
-    // 회원가입 요청
-    const handleSignUp = async () => {
-        // 모든 필드에 대해 마지막 유효성 검사 수행
-        const finalUsernameError = validateRequired(username, "아이디");
-        const finalNameError = validateRequired(name, "이름");
-        const finalPasswordError = validatePassword(password);
-        const finalEmailError = validateRequired(email, "이메일");
-
-        setUsernameErrorMsg(finalUsernameError);
-        setNameErrorMsg(finalNameError);
-        setPasswordErrorMsg(finalPasswordError);
-        setEmailErrorMsg(finalEmailError);
-
-        // 인증번호 입력 확인
-        if (
-            finalUsernameError ||
-            finalNameError ||
-            finalPasswordError ||
-            finalEmailError ||
-            verifyCode.trim() === ""
-        ) {
-            console.error(
-                "모든 필수 정보를 올바르게 입력하고 인증번호를 확인해주세요."
-            );
-            return;
-        }
-
-        setIsLoading(true); // 로딩 시작
+    // 회원가입 요청 (handleSubmit에 의해 호출)
+    const handleSignUp = async (data) => {
+        // data 객체는 { username, name, password, email, verifyCode }를 포함
+        setIsLoading(true);
 
         const userDto = {
-            username,
-            name,
-            password,
-            email,
+            username: data.username,
+            name: data.name,
+            password: data.password,
+            email: data.email,
             provider: "local",
             authority: "ROLE_USER",
-            verifyCode,
+            verifyCode: data.verifyCode,
         };
 
         try {
-            const response = await axios.post(
-                API_ENDPOINTS.AUTH.SIGN_UP,
-                userDto
-            );
+            await axios.post(API_ENDPOINTS.AUTH.SIGN_UP, userDto);
             nav("/result/register", { replace: true });
         } catch (error) {
             console.error("회원가입 실패: ", error);
-            if (error.response && error.response.status === 401) {
-                setJoinErrorMsg(
-                    error.response.data.message || "회원가입에 실패했습니다."
-                );
-            }
+            const errorMessage =
+                error.response?.data?.message || "회원가입에 실패했습니다.";
 
-            if (error.response) {
-                setJoinErrorMsg(
-                    error.response.data.message || "회원가입에 실패했습니다."
-                );
+            // 서버 측 에러 처리
+            if (errorMessage.includes("인증번호")) {
+                setError("verifyCode", {
+                    type: "server",
+                    message: errorMessage,
+                });
+            } else if (errorMessage.includes("아이디")) {
+                setError("username", { type: "server", message: errorMessage });
+            } else if (errorMessage.includes("이메일")) {
+                setError("email", { type: "server", message: errorMessage });
+            } else {
+                setJoinErrorMsg(errorMessage); // 기타 전역 에러
             }
         } finally {
             setIsLoading(false);
         }
     };
 
-    // 버튼 클릭 핸들러(버튼 텍스트에 따라 호출 함수 분기)
-    const handleButtonClick = () => {
+    // 폼 제출 핸들러: isVerifiedRequested 상태에 따라 분기
+    const onSubmit = (data) => {
         if (!isVerifiedRequested) {
-            // 1. 모든 필드에 대해 즉시 유효성 검사 수행 및 에러 메시지 업데이트
-            const usernameValid = validateRequired(username, "아이디") === "";
-            const nameValid = validateRequired(name, "이름") === "";
-            const passwordValid = validatePassword(password) === "";
-            const emailValid = validateRequired(email, "이메일") === "";
-
-            setUsernameErrorMsg(
-                usernameValid ? "" : validateRequired(username, "아이디")
-            );
-            setNameErrorMsg(nameValid ? "" : validateRequired(name, "이름"));
-            setPasswordErrorMsg(
-                passwordValid ? "" : validatePassword(password)
-            );
-            setEmailErrorMsg(
-                emailValid ? "" : validateRequired(email, "이메일")
-            );
-
-            // 2. 모든 필드가 유효하면 인증 요청
-            if (usernameValid && nameValid && passwordValid && emailValid) {
-                handleRequestVerification();
-            }
+            // 인증 요청
+            handleRequestVerification();
         } else {
-            handleSignUp();
+            // 회원가입 요청
+            handleSignUp(data);
         }
     };
-
-    // ------------ 에러 메시지 렌더링 준비 ------------
-    // 아이디, 이름, 비밀번호, 에러 메시지 수집
-    const userInfoErrors = [
-        usernameErrorMsg,
-        nameErrorMsg,
-        passwordErrorMsg,
-    ].filter(Boolean);
-
-    // 이메일 에러 메시지 수집
-    const emailErrors = [emailErrorMsg].filter(Boolean);
 
     // ------------ 버튼 활성화 조건 ------------
 
     const buttonText = isVerifiedRequested ? "가입하기" : "인증 요청";
 
-    // 인증 요청 버튼 활성화 조건 (필수 필드가 모두 채워지고 현재 에러가 없어야 함)
-    const isRequestEnabled =
-        username.trim() !== "" &&
-        name.trim() !== "" &&
-        password.trim() !== "" &&
-        email.trim() !== "" &&
-        !userInfoErrors.length &&
-        !emailErrors.length;
+    // 기본 정보 (아이디, 이름, 비밀번호)가 모두 유효하고 에러가 없는지 확인
+    const areBaseFieldsValid =
+        !errors.username &&
+        !errors.name &&
+        !errors.password &&
+        watch("username") &&
+        watch("name") &&
+        watch("password");
 
-    // 가입하기 버튼 활성화 조건
+    // 인증 요청 버튼 활성화 조건: 기본 필드와 이메일 필드가 모두 유효할 때
+    const isRequestEnabled = areBaseFieldsValid && !errors.email && emailValue;
+
+    // 가입하기 버튼 활성화 조건: 기본 필드, 이메일, 인증번호 필드가 모두 유효하고 인증 요청 상태일 때
     const isSignUpEnabled =
         isVerifiedRequested &&
-        username.trim() !== "" &&
-        name.trim() !== "" &&
-        password.trim() !== "" &&
-        email.trim() !== "" &&
-        verifyCode.trim() !== "" &&
-        !userInfoErrors.length &&
-        !emailErrors.length &&
-        !verifyErrosrMsg.length;
+        areBaseFieldsValid &&
+        !errors.email &&
+        !errors.verifyCode &&
+        emailValue &&
+        verifyCodeValue.length === 6;
 
-    // 최종 버튼 비활성화 조건: 로딩 중이거나, 로딩 중이 아니면서 버튼이 활성화될 조건을 충족하지 못한 경우
+    // 최종 버튼 비활성화 조건
     const isButtonDisabled =
         isLoading ||
         (isVerifiedRequested && !isSignUpEnabled) ||
-        (!isVerifiedRequested && !isRequestEnabled);
+        (!isVerifiedRequested && !isRequestEnabled) ||
+        isSubmitting;
+
+    // 에러 메시지 렌더링 함수
+    const renderErrorMessage = (error) => {
+        if (error) {
+            // 커스텀 메시지를 표시할 경우를 위한 맵핑
+            switch (error.type) {
+                case "required":
+                    return "필수 정보입니다.";
+                case "pattern":
+                    return "최소 8자의 영문 대/소문자, 숫자, 특수문자를 사용해주세요.";
+                case "maxLength":
+                    return "인증번호는 6자리입니다.";
+                case "server":
+                case "expired":
+                    return error.message; // 서버 또는 타이머 초과 에러 메시지
+                default:
+                    return error.message;
+            }
+        }
+        return null;
+    };
 
     return (
         <>
-            <div className="Register">
+            {/* handleSubmit(onSubmit)으로 폼 제출을 래핑하여 유효성 검사 후 onSubmit이 호출되도록 함 */}
+            <form onSubmit={handleSubmit(onSubmit)} className="Register">
                 <LogoHeader />
                 <div className="user-info-wrapper">
                     {/* 아이디 입력 그룹 */}
@@ -301,19 +235,18 @@ const Register = () => {
                         <div className="input-container">
                             <input
                                 id="id"
-                                value={username}
-                                className={
-                                    usernameErrorMsg ? "input-error" : ""
-                                }
-                                onBlur={handleUsernameBlur}
-                                onChange={handleUsernameChange}
+                                // 폼 등록 및 유효성 검사 규칙 설정
+                                {...register("username", {
+                                    required: true,
+                                })}
+                                className={errors.username ? "input-error" : ""}
                                 required
-                                disabled={isLoading}
+                                disabled={isLoading || isSubmitting}
                             />
                             <label
                                 htmlFor="id"
                                 className={
-                                    usernameErrorMsg ? "input-error-label" : ""
+                                    errors.username ? "input-error-label" : ""
                                 }
                             >
                                 아이디
@@ -326,17 +259,17 @@ const Register = () => {
                         <div className="input-container">
                             <input
                                 id="name"
-                                value={name}
-                                className={nameErrorMsg ? "input-error" : ""}
-                                onBlur={handleNameBlur}
-                                onChange={handleNameChange}
+                                {...register("name", {
+                                    required: true,
+                                })}
+                                className={errors.name ? "input-error" : ""}
                                 required
-                                disabled={isLoading}
+                                disabled={isLoading || isSubmitting}
                             />
                             <label
                                 htmlFor="name"
                                 className={
-                                    nameErrorMsg ? "input-error-label" : ""
+                                    errors.name ? "input-error-label" : ""
                                 }
                             >
                                 이름
@@ -350,19 +283,18 @@ const Register = () => {
                             <input
                                 id="password"
                                 type={passwordVisible ? "text" : "password"}
-                                value={password}
-                                className={
-                                    passwordErrorMsg ? "input-error" : ""
-                                }
-                                onBlur={handlePasswordBlur}
-                                onChange={handlePasswordChange}
+                                {...register("password", {
+                                    required: true,
+                                    pattern: passwordRegex,
+                                })}
+                                className={errors.password ? "input-error" : ""}
                                 required
-                                disabled={isLoading}
+                                disabled={isLoading || isSubmitting}
                             />
                             <label
                                 htmlFor="password"
                                 className={
-                                    passwordErrorMsg ? "input-error-label" : ""
+                                    errors.password ? "input-error-label" : ""
                                 }
                             >
                                 비밀번호
@@ -382,19 +314,32 @@ const Register = () => {
                         </div>
                     </div>
 
-                    {/* 아이디, 이름, 비밀번호 에러 메시지 그룹화 및 표시 (비밀번호 input 아래) */}
-                    {userInfoErrors.length > 0 && (
-                        <div className="error-messages-group">
-                            {userInfoErrors.map((msg, index) => (
-                                <p
-                                    key={`user-error-${index}`}
-                                    className="error-message"
-                                >
-                                    {msg}
-                                </p>
-                            ))}
-                        </div>
-                    )}
+                    {/* 아이디, 이름, 비밀번호 에러 메시지 그룹화 및 표시 */}
+                    <div className="error-messages-group">
+                        {(errors.username ||
+                            errors.name ||
+                            errors.password) && (
+                            <>
+                                {errors.username && (
+                                    <p className="error-message">
+                                        아이디:{" "}
+                                        {renderErrorMessage(errors.username)}
+                                    </p>
+                                )}
+                                {errors.name && (
+                                    <p className="error-message">
+                                        이름: {renderErrorMessage(errors.name)}
+                                    </p>
+                                )}
+                                {errors.password && (
+                                    <p className="error-message">
+                                        비밀번호:{" "}
+                                        {renderErrorMessage(errors.password)}
+                                    </p>
+                                )}
+                            </>
+                        )}
+                    </div>
                 </div>
                 <div className="email-wrapper">
                     {/* 이메일 입력 그룹 */}
@@ -403,17 +348,21 @@ const Register = () => {
                             <input
                                 id="email"
                                 type="email"
-                                value={email}
-                                className={emailErrorMsg ? "input-error" : ""}
-                                onBlur={handleEmailBlur}
-                                onChange={handleEmailChange}
+                                {...register("email", {
+                                    required: true,
+                                })}
+                                className={errors.email ? "input-error" : ""}
                                 required
-                                disabled={isLoading}
+                                disabled={
+                                    isLoading ||
+                                    isSubmitting ||
+                                    isVerifiedRequested
+                                } // 인증 요청 후에는 이메일 수정 불가
                             />
                             <label
                                 htmlFor="email"
                                 className={
-                                    emailErrorMsg ? "input-error-label" : ""
+                                    errors.email ? "input-error-label" : ""
                                 }
                             >
                                 이메일
@@ -426,37 +375,37 @@ const Register = () => {
                         <input
                             id="auth-number"
                             className="authentication-number"
-                            onBlur={handleVerificationCodeBlur}
                             maxLength={6}
-                            onChange={(e) => {
-                                setVerifyCode(e.target.value);
-                            }}
+                            {...register("verifyCode", {
+                                required: isVerifiedRequested ? true : false, // 인증 요청 상태일 때만 필수
+                                maxLength: 6,
+                            })}
                             required
-                            disabled={!isVerifiedRequested || isLoading}
+                            disabled={
+                                !isVerifiedRequested ||
+                                isLoading ||
+                                isSubmitting
+                            }
                         />
                         <label htmlFor="auth-number">인증번호 6자리 입력</label>
                     </div>
-                    {/* 인증번호 6자리 미만 시 에러 메시지 */}
-                    {verifyErrosrMsg && (
-                        <div className="error-message">
-                            <p>{verifyErrosrMsg}</p>
-                        </div>
-                    )}
 
-                    {/* 이메일 에러 메시지 그룹화 및 표시 (인증번호 input 아래) */}
-                    {emailErrors.length > 0 && (
-                        <div className="error-messages-group">
-                            {emailErrors.map((msg, index) => (
-                                <p
-                                    key={`email-error-${index}`}
-                                    className="error-message"
-                                >
-                                    {msg}
-                                </p>
-                            ))}
-                        </div>
-                    )}
+                    {/* 이메일/인증번호 에러 메시지 그룹화 및 표시 */}
+                    <div className="error-messages-group">
+                        {errors.email && (
+                            <p className="error-message">
+                                이메일: {renderErrorMessage(errors.email)}
+                            </p>
+                        )}
+                        {errors.verifyCode && (
+                            <p className="error-message">
+                                인증번호:{" "}
+                                {renderErrorMessage(errors.verifyCode)}
+                            </p>
+                        )}
+                    </div>
                 </div>
+
                 {/* 인증 메일 전송 성공 시 보여줄 메시지와 타이머 */}
                 {isVerifiedRequested && (
                     <div className="verification-messasge">
@@ -468,23 +417,27 @@ const Register = () => {
                         </span>
                     </div>
                 )}
-                {/* 회원가입 실패 시, 보여줄 메시지 */}
+
+                {/* 회원가입 실패 시, 보여줄 메시지 (폼 제출 전역 에러) */}
                 {joinErrorMsg && (
                     <div className="error-message">
                         <p>{joinErrorMsg}</p>
                     </div>
                 )}
+
                 <button
-                    className={`register-btn ${isLoading ? "loading" : ""}`}
-                    onClick={handleButtonClick}
+                    className={`register-btn ${
+                        isLoading || isSubmitting ? "loading" : ""
+                    }`}
                     disabled={isButtonDisabled}
-                    type="button"
+                    type="submit" // 폼 제출을 위해 type="submit"으로 변경
                 >
-                    {/* 로딩 중이 아닐 때는 텍스트를, 로딩 중일 때는 CSS가 텍스트를 숨기고 스피너를 보여준다. */}
                     <span className="button-content">{buttonText}</span>
-                    {isLoading && <div className="spinner"></div>}
+                    {(isLoading || isSubmitting) && (
+                        <div className="spinner"></div>
+                    )}
                 </button>
-            </div>
+            </form>
         </>
     );
 };
