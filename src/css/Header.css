@@ -25,9 +25,9 @@
 
 /* 로고 이미지 스타일 */
 .Header .logo-image {
-    height: 60px; /* 로고 이미지의 높이 조절 */
+    max-height: 60px;
+    height: 100%;
     cursor: pointer; /* 클릭 가능하다는 표시 */
-    /* 필요시 max-width 등 추가하여 반응형 처리 */
 }
 
 .auth-links {
@@ -96,4 +96,14 @@
     width: 24px;
     height: 24px;
     object-fit: contain;
+}
+
+@media (max-width: 500px) {
+    .Header {
+        overflow-x: hidden; /* 가로 넘침 방지 */
+    }
+
+    .Header .logo-image {
+        max-height: 40px;
+    }
 }
