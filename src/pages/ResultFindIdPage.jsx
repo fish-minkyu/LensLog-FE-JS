@@ -1,6 +1,7 @@
 import "../css/ResultFindIdPage.css";
 import { useLocation, useNavigate } from "react-router-dom";
 import LogoHeader from "../components/LogoHeader";
+import Header from "../components/Header";
 import kakao from "../assets/social-kakao.svg";
 import google from "../assets/social-google.svg";
 import naver from "../assets/social-naver.svg";
@@ -74,8 +75,8 @@ const ResultFindIdPage = () => {
 
     return (
         <div className="ResultFindIdPage">
-            <LogoHeader />
             <div className="content-wrapper">
+                <LogoHeader option={"flex-start"} />
                 <h3 className="title">아이디 찾기</h3>
 
                 <div className="summary-text">

@@ -1,6 +1,26 @@
+.LogoHeader {
+    display: flex; /* LogoHeader를 flex 컨테이너로 만듭니다. */
+    align-items: center; /* 로고 이미지의 높이가 변경되어도 세로축 중앙에 정렬됩니다. */
+    justify-content: center; /* 기본 정렬을 중앙으로 설정합니다. (option이 없을 때) */
+    padding: 0 20px; /* 로고가 화면 가장자리에 너무 붙지 않도록 좌우 패딩을 줍니다. */
+    width: 100%; /* 부모 요소의 너비를 꽉 채우도록 설정 */
+    box-sizing: border-box; /* 패딩이 너비에 포함되도록 합니다. */
+}
+
 .LogoHeader .logo-image {
-    margin: 20px auto;
+    /* 기존의 'margin: 20px auto;'는 LogoHeader가 flex 컨테이너가 되면서 justify-content가 정렬을 담당하므로 제거하거나 조절합니다. */
+    margin: 20px 0; /* 위아래 마진은 유지하고, 좌우 마진은 0으로 설정 */
     height: 60px; /* 로고 이미지의 높이 조절 */
     cursor: pointer; /* 클릭 가능하다는 표시 */
     /* 필요시 max-width 등 추가하여 반응형 처리 */
+}
+
+/* option이 'flex-start'일 때의 스타일 */
+.LogoHeader_flex-start {
+    justify-content: flex-start; /* 자식 요소(로고 이미지)를 flex 컨테이너의 시작점(왼쪽)으로 정렬합니다. */
+}
+
+/* option이 'flex-end'일 때 (선택 사항) */
+.LogoHeader_flex-end {
+    justify-content: flex-end; /* 자식 요소를 flex 컨테이너의 끝점(오른쪽)으로 정렬합니다. */
 }

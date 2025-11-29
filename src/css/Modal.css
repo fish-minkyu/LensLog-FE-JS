@@ -61,6 +61,7 @@
     color: #333;
     font-size: 18px;
     font-weight: 500;
+    padding: 0px 10px;
 }
 
 .modal-button:not(.yes):hover {

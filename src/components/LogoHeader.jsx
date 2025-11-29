@@ -2,11 +2,11 @@ import "../css/LogoHeader.css";
 import { useNavigate } from "react-router-dom";
 import logoImage from "../assets/logo.svg";
 
-const LogoHeader = () => {
+const LogoHeader = ({ option }) => {
     const nav = useNavigate();
 
     return (
-        <div className="LogoHeader">
+        <div className={`LogoHeader LogoHeader_${option}`}>
             <img
                 className="logo-image"
                 src={logoImage}

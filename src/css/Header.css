@@ -7,7 +7,7 @@
     width: 100%;
     box-sizing: border-box;
     min-height: 60px;
-    max-width: 1400px;
+    max-width: 100%;
 }
 
 .Header .header-item {

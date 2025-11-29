@@ -62,8 +62,8 @@
     font-size: 16px;
 }
 
-@media (max-width: 500px) {
+@media (max-width: 767px) {
     .FindIdPage {
-        max-width: 300px;
+        max-width: 400px;
     }
 }
