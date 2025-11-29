@@ -1,6 +1,6 @@
 import "../css/Register.css";
 import { useEffect, useState } from "react";
-import { useForm } from "react-hook-form"; // 👈 useForm 훅 임포트
+import { useForm } from "react-hook-form";
 import LogoHeader from "../components/LogoHeader";
 import eyeOpen from "../assets/open-eye-gray.svg";
 import eyeClosed from "../assets/closed-eye-gray.svg";
