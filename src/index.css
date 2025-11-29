@@ -29,7 +29,6 @@
 * {
     margin: 0;
     padding: 0;
-    overflow-x: hidden; /* 가로 넘침 방지 */
     box-sizing: border-box;
 }
 

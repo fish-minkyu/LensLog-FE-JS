@@ -1,3 +1,7 @@
+.Home {
+    overflow-x: hidden; /* 가로 넘침 방지 */
+}
+
 .Home .body-container {
     margin: 0 260px;
 }

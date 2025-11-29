@@ -4,55 +4,51 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import API_ENDPOINTS from "../constants/api";
+import { useForm } from "react-hook-form";
 
-// 아이디 찾기 입력 화면
 const FindIdPage = () => {
-    // 상태 관리
-    const [name, setName] = useState("");
-    const [email, setEmail] = useState("");
-
-    // 에러 메시지 상태
-    const [errorMessage, setErrorMessage] = useState("");
-
     const nav = useNavigate();
 
-    // 핸들러: 이름
-    const handleNamgeChange = (e) => {
-        setName(e.target.value);
-    };
+    // API 호출 실패 시 에러 메시지 (서버 에러용)
+    const [apiError, setApiError] = useState("");
 
-    // 핸들러: 이메일
-    const handleEmailChange = (e) => {
-        setEmail(e.target.value);
-    };
+    // react-hook-form 설정
+    const {
+        register,
+        handleSubmit,
+        formState: { errors },
+        // NOTE: 블러 시 유효성 검사를 위해 mode를 'onBlur'로 변경
+    } = useForm({
+        mode: "onBlur", // 블러 시 유효성 검사 실행
+        defaultValues: {
+            name: "",
+            email: "",
+        },
+    });
 
-    const onClickFindID = async () => {
+    // 폼 제출 핸들러 (유효성 검사 통과 시 실행됨)
+    const onSubmit = async (data) => {
+        const { name, email } = data;
+
+        // API 에러 메시지를 먼저 초기화
+        setApiError("");
+
         try {
-            if (!name) {
-                setErrorMessage("이름을 입력해주세요.");
-                return;
-            }
-
-            if (!email) {
-                setErrorMessage("이메일을 입력헤주세요.");
-                return;
-            }
-
             const response = await axios.get(API_ENDPOINTS.AUTH.FIND_USERNAME, {
                 params: { name, email },
             });
-            // 성공 시 에러 메시지 초기화
-            setErrorMessage("");
+
+            // 성공 시 이동
             nav("/result/id", {
                 replace: true,
-                state: { userInfo: response.data, name: name }, // 결과 페이지에서 location.state로 확인 가능
+                state: { userInfo: response.data, name: name },
             });
         } catch (error) {
             if (error.response && error.response.status === 404) {
-                setErrorMessage("입력하신 정보와 일치하는 아이디가 없습니다.");
+                setApiError("입력하신 정보와 일치하는 아이디가 없습니다.");
             } else {
                 console.error("아이디 찾기 중 오류 발생: ", error);
-                setErrorMessage(
+                setApiError(
                     "아이디 찾기 중 오류가 발생했습니다. 잠시 후 다시 시도해주세요."
                 );
             }
@@ -62,42 +58,84 @@ const FindIdPage = () => {
     return (
         <div className="FindIdPage">
             <LogoHeader />
-            <div className="input-wrapper">
+            <form className="input-wrapper" onSubmit={handleSubmit(onSubmit)}>
                 <h3 className="title">아이디 찾기</h3>
 
+                {/* 이름 입력 */}
                 <div className="input-group">
                     <div className="input-container">
                         <input
                             id="name"
                             type="text"
-                            value={name}
-                            onChange={handleNamgeChange}
+                            // errors.name이 있을 때만 에러 클래스 적용
+                            className={errors.name ? "input-error" : ""}
+                            {...register("name", {
+                                // 요구사항에 맞춰 메시지 수정
+                                required: "이름: 필수정보입니다.",
+                            })}
                         />
-                        <label>이름</label>
+                        <label
+                            htmlFor="name"
+                            className={errors.name ? "input-error-label" : ""}
+                        >
+                            이름
+                        </label>
                     </div>
+                    {/* 유효성 에러 메시지 표시 */}
+                    {errors.name && (
+                        <div className="result-id-page-error-message">
+                            <span className="error-text">
+                                {errors.name.message}
+                            </span>
+                        </div>
+                    )}
                 </div>
+
+                {/* 이메일 입력 */}
                 <div className="input-group">
                     <div className="input-container">
                         <input
                             id="email"
                             type="email"
-                            value={email}
-                            onChange={handleEmailChange}
+                            // errors.email이 있을 때만 에러 클래스 적용
+                            className={errors.email ? "input-error" : ""}
+                            {...register("email", {
+                                // 요구사항에 맞춰 메시지 수정
+                                required: "이메일: 필수정보입니다.",
+                                pattern: {
+                                    value: /\S+@\S+\.\S+/,
+                                    message: "유효한 이메일 형식이 아닙니다.",
+                                },
+                            })}
                         />
-                        <label>이메일</label>
+                        <label
+                            htmlFor="email"
+                            className={errors.email ? "input-error-label" : ""}
+                        >
+                            이메일
+                        </label>
                     </div>
+                    {/* 유효성 에러 메시지 표시 */}
+                    {errors.email && (
+                        <div className="result-id-page-error-message">
+                            <span className="error-text">
+                                {errors.email.message}
+                            </span>
+                        </div>
+                    )}
                 </div>
 
-                {errorMessage && (
+                {/* 서버 API 에러 메시지 표시 */}
+                {apiError && (
                     <div className="result-id-page-error-message">
-                        <span className="error-text">{errorMessage}</span>
+                        <span className="error-text">{apiError}</span>
                     </div>
                 )}
-            </div>
 
-            <button className="find-id-button" onClick={onClickFindID}>
-                아이디 찾기
-            </button>
+                <button type="submit" className="find-id-button">
+                    아이디 찾기
+                </button>
+            </form>
         </div>
     );
 };
