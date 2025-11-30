@@ -1,7 +1,7 @@
-const BASE_PROTOCOL = import.meta.env.VITE_PROTOCOL || "http";
-const BASE_DOMAIN = import.meta.env.VITE_BASE_DOMAIN || "localhost:8080";
-
-const BASE_URL = BASE_PROTOCOL + "://" + BASE_DOMAIN;
+// 환경 변수에서 VITE_API_BASE_URL 값을 가져온다.
+// .env.development 파일이 있다면 "http://localhost:8080"
+// .env.production 파일이 있다면 "" (빈 문자열)
+const BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
 const API_ENDPOINTS = {
     AUTH: {
@@ -63,7 +63,7 @@ const API_ENDPOINTS = {
 
 export default API_ENDPOINTS;
 
-// 위에서 정의한 API 엔드포인트 파일을 import 합니다.
+// 위에서 정의한 API 엔드포인트 파일을 import
 // import axios from 'axios';
 // import API_ENDPOINTS from '../constants/apiEndpoints';
 
