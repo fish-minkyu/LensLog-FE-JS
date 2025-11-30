@@ -1,0 +1,44 @@
+name: Deploy LensLog Frontend to EC2
+
+on:
+    push:
+        branches:
+            - main # main 브랜치에 푸시될 때 실행
+
+jobs:
+    build-and-deploy:
+        runs-on: ubuntu-latest
+
+        steps:
+            - name: Checkout code
+              uses: actions/checkout@v3
+
+            - name: Set up Node.js
+              uses: actions/setup-node@v3
+              with:
+                  node-version: "20"
+
+            - name: Install dependencies
+              run: npm install
+
+            - name: Build React App
+              run: npm run build # Vite 앱 빌드 (기본적으로 'dist' 폴더에 결과물 생성)
+
+            - name: Deploy to EC2 (via SCP)
+              # appleboy/scp-action@master 액션을 사용하여 빌드된 정적 파일을
+              # EC2 인스턴스의 "/var/www/lenslog-fe/"로 전달
+              uses: appleboy/scp-action@master
+              with:
+                  host: ${{ secrets.EC2_HOST }}
+                  username: ${{ secrets.EC2_USERNAME }}
+                  key: ${{ secrets.EC2_SSH_KEY }}
+                  source: "dist/*" # 빌드된 React 정적 파일
+                  target: "/var/www/lenslog-fe/" # EC2의 Nginx 서빙 경로
+              # EC2로 파일 전송 후 Nginx 재시작 (옵션: 파일 전송 후 SSH로 재시작)
+              # - name: Restart Nginx
+              #   uses: appleboy/ssh-action@master
+              #   with:
+              #     host: ${{ secrets.EC2_HOST }}
+              #     username: ${{ secrets.EC2_USERNAME }}
+              #     key: ${{ secrets.EC2_SSH_KEY }}
+              #     script: sudo systemctl restart nginx
