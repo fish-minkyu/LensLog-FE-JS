@@ -1,7 +1,7 @@
 // 환경 변수에서 VITE_API_BASE_URL 값을 가져온다.
 // .env.development 파일이 있다면 "http://localhost:8080"
 // .env.production 파일이 있다면 "" (빈 문자열)
-const BASE_URL = import.meta.env.VITE_API_BASE_URL;
+const BASE_URL = import.meta.env.VITE_API_BASE_URL || ""; 
 
 const API_ENDPOINTS = {
     AUTH: {
