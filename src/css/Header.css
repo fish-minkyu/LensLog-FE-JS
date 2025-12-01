@@ -32,7 +32,7 @@
 }
 
 .auth-links {
-    width: 400px;
+    width: auto; /* 내용물만큼만 너비 차지 */
     height: 36px;
     display: flex;
     justify-content: flex-end;
@@ -47,6 +47,7 @@
     line-height: 36px;
     display: flex;
     align-items: center;
+    white-space: nowrap; /* 글자가 줄바꿈 되지 않도록 설정 */
 
     /* 버튼의 기본 스타일을 제거하거나 초기화 */
     background: none; /* 배경 제거 */
@@ -102,9 +103,17 @@
 @media (max-width: 767px) {
     .Header {
         overflow-x: hidden; /* 가로 넘침 방지 */
+        padding: 10px 15px;
     }
 
     .Header .logo-image {
-        max-height: 40px;
+        max-height: 32px;
+    }
+
+    /* 모바일에서 글자 크기 조절 */
+    .auth-links .auth-link,
+    .auth-links .auth-separator,
+    .auth-links .welcome-message {
+        font-size: 14px; /* 글자를 조금 작게 */
     }
 }
