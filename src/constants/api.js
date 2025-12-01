@@ -1,7 +1,7 @@
 // 환경 변수에서 VITE_API_BASE_URL 값을 가져온다.
 // .env.development 파일이 있다면 "http://localhost:8080"
 // .env.production 파일이 있다면 "" (빈 문자열)
-const BASE_URL = import.meta.env.VITE_API_BASE_URL || ""; 
+const BASE_URL = import.meta.env.VITE_API_BASE_URL || "";
 
 const API_ENDPOINTS = {
     AUTH: {
@@ -21,6 +21,11 @@ const API_ENDPOINTS = {
         DELETE_USER: `${BASE_URL}/api/auth/delete`,
         // 유저 정보 반환
         CHECK_LOGIN: `${BASE_URL}/api/auth/checkLogin`,
+    },
+    SOCIAL_LOGINL: {
+        KAKAO: import.meta.env.VITE_SOCIAL_LOGIN_KAKAO,
+        GOOGLE: import.meta.env.VITE_SOCIAL_LOGIN_GOOGLE,
+        NAVER: import.meta.env.VITE_SOCIAL_LOGIN_NAVER,
     },
     EMAIL: {
         // 인증코드 메일 발송

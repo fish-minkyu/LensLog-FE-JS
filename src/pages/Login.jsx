@@ -51,6 +51,7 @@ const Login = () => {
 
             if (response.status === 200) {
                 const userData = response.data;
+                s;
                 login(userData);
 
                 nav("/", { replace: true });
@@ -68,18 +69,15 @@ const Login = () => {
     };
 
     const handleKakaoLogin = () => {
-        window.location.href =
-            "http://localhost:8080/oauth2/authorization/kakao";
-    };
-
-    const handleNaverLogin = () => {
-        window.location.href =
-            "http://localhost:8080/oauth2/authorization/naver";
+        window.location.href = import.meta.env.VITE_SOCIAL_LOGIN_KAKAO;
     };
 
     const handleGoogleLogin = () => {
-        window.location.href =
-            "http://localhost:8080/oauth2/authorization/google";
+        window.location.href = import.meta.env.VITE_SOCIAL_LOGIN_GOOGLE;
+    };
+
+    const handleNaverLogin = () => {
+        window.location.href = import.meta.env.VITE_SOCIAL_LOGIN_NAVER;
     };
 
     return (
