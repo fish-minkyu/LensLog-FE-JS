@@ -51,7 +51,6 @@ const Login = () => {
 
             if (response.status === 200) {
                 const userData = response.data;
-                s;
                 login(userData);
 
                 nav("/", { replace: true });
