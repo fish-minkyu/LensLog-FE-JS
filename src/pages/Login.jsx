@@ -69,15 +69,15 @@ const Login = () => {
     };
 
     const handleKakaoLogin = () => {
-        window.location.href = import.meta.env.VITE_SOCIAL_LOGIN_KAKAO;
+        window.location.href = API_ENDPOINTS.SOCIAL_LOGIN.KAKAO;
     };
 
     const handleGoogleLogin = () => {
-        window.location.href = import.meta.env.VITE_SOCIAL_LOGIN_GOOGLE;
+        window.location.href = API_ENDPOINTS.SOCIAL_LOGIN.GOOGLE;
     };
 
     const handleNaverLogin = () => {
-        window.location.href = import.meta.env.VITE_SOCIAL_LOGIN_NAVER;
+        window.location.href = API_ENDPOINTS.SOCIAL_LOGIN.NAVER;
     };
 
     return (

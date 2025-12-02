@@ -22,7 +22,7 @@ const API_ENDPOINTS = {
         // 유저 정보 반환
         CHECK_LOGIN: `${BASE_URL}/api/auth/checkLogin`,
     },
-    SOCIAL_LOGINL: {
+    SOCIAL_LOGIN: {
         KAKAO: import.meta.env.VITE_SOCIAL_LOGIN_KAKAO,
         GOOGLE: import.meta.env.VITE_SOCIAL_LOGIN_GOOGLE,
         NAVER: import.meta.env.VITE_SOCIAL_LOGIN_NAVER,
