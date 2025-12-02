@@ -170,7 +170,7 @@
     align-items: center;
     max-width: 1280px;
     width: 100%;
-    padding-right: 80px;
+    /* padding-right: 80px; */
 }
 
 .detail-container.landscape .photo-wrapper {
@@ -182,7 +182,7 @@
     width: 100%;
     max-width: 1260px;
     align-self: center;
-    flex-direction: row;
+    flex-direction: row; /* 데스크톱에서는 가로로 배치 */
     align-items: flex-end;
     justify-content: space-between;
     gap: 24px;
@@ -202,7 +202,7 @@
 
 .detail-container.landscape .photo-details {
     width: auto;
-    max-width: 500px;
+    max-width: 100%;
     align-self: flex-end;
     margin-left: auto;
 }
@@ -225,23 +225,112 @@
 
 /* Mobile (가로 767px 이하) */
 @media (max-width: 767px) {
+    /* 1. 기본 설정 (유지) */
     .Detail {
-        padding: 40px; /* 전체 컨테이너 여백 줄이기 */
+        padding: 10px;
     }
 
-    .back-button {
-        margin-left: 20px;
+    .Detail .detail-body {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+    }
+
+    .Detail .detail-body .back-button > img {
+        margin-left: 0;
+        margin-bottom: 10px;
+        width: 50%;
+        height: 50%;
+    }
+
+    /* 2. Detail Container: 모든 모드에서 모바일 레이아웃 강제 적용 */
+    .Detail .detail-body .detail-container,
+    .detail-container.portrait,
+    .detail-container.landscape {
+        flex-direction: column !important;
+        padding: 24px;
+        width: 100%;
+        max-width: 100%;
+        border-width: 1px;
+        gap: 20px;
+    }
+
+    /* 3. Photo Wrapper & Photo (유지) */
+    .photo-wrapper,
+    .detail-container.landscape .photo-wrapper {
+        /* landscape 오버라이드 */
+        width: 100%;
+        max-width: 100%;
     }
 
     .photo {
-        max-height: 300px; /* 모바일 이미지 최대 높이 */
+        max-height: 300px;
+        width: 100%;
     }
 
-    .detail-label {
-        font-size: 10px;
+    /* 4. Photo Info (정보 영역 설정) - 선택자 구체화 (핵심 수정) */
+    /* landscape의 row 설정보다 우선순위를 높여 column을 강제합니다. */
+    .detail-container.landscape .photo-info,
+    .photo-info {
+        width: 100%;
+        /* 데스크톱의 flex: 1;과 row 설정을 덮어쓰기 */
+        flex-direction: column !important;
+        align-items: flex-start !important;
+        flex: 0 0 auto !important;
+
+        align-self: auto;
+        gap: 16px;
+        min-width: 0;
+
+        /* 혹시 모를 데스크톱 max-width를 초기화 */
+        max-width: 100% !important;
     }
 
+    /* 5. Like Button */
+    .like-button,
+    .detail-container.landscape .like-button {
+        margin-bottom: 0;
+        align-self: flex-start;
+    }
+
+    /* 6. Photo Details (튀어나가는 부분) - 선택자 구체화 */
+    .detail-container.landscape .photo-details,
+    .photo-details {
+        width: 100%;
+        max-width: 100%;
+        margin-left: 0 !important; /* !!데스크톱의 margin-left: auto를 강제로 덮어씁니다!! */
+        flex-shrink: 0;
+        box-sizing: border-box;
+    }
+
+    /* 7. 상세 항목 */
+    .detail-item {
+        padding: 12px 6px;
+        flex: 1;
+        /* 항목이 줄어들 수 있도록 설정 */
+        flex-shrink: 1;
+        /* 항목의 최소 너비 설정 (세 항목이 들어갈 수 있도록) */
+        min-width: 0;
+    }
+
+    .detail-label,
     .detail-value {
-        font-size: 10px;
+        width: auto;
+        text-align: center;
+        font-size: 12px;
+        /* 항목 내용이 넘칠 때 줄바꿈 허용 */
+        white-space: normal;
+    }
+
+    /* 8. 다운로드 버튼 */
+    .download-button,
+    .download-button.portrait {
+        top: 16px;
+        right: 16px;
+    }
+
+    .download-button.landscape {
+        top: 200px;
+        right: 16px;
     }
 }
