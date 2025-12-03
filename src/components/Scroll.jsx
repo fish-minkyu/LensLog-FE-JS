@@ -1,63 +1,70 @@
+// src/components/Scroll.jsx
 import "../css/Scroll.css";
 import { useState, useRef, useEffect, useCallback } from "react";
 import axios from "axios";
 import API_ENDPOINTS from "../constants/api";
 import Masonry from "react-masonry-css";
 import { Link } from "react-router-dom";
+import usePhotoFeedStore from "../hooks/usePhotoFeedStore";
 
 const Scroll = ({ categoryId }) => {
-    const [photos, setPhotos] = useState([]);
-    const [loading, setLoading] = useState(false);
-    const [currentLastPhotoId, setCurrentLastPhotoId] = useState(null);
-    const [hasNext, setHasNext] = useState(true);
+    const categoryKey = categoryId ?? "all";
 
-    // 무한 요청 방지를 위해 loading과 hasNext를 Ref로 관리
-    const loadingRef = useRef(loading);
-    const hasNextRef = useRef(hasNext);
-
-    // loading/hasNext 상태가 변경될 때마다 Ref 값 업데이트
-    useEffect(() => {
-        loadingRef.current = loading;
-        hasNextRef.current = hasNext;
-    }, [loading, hasNext]);
-
-    const pageSize = 30;
+    const {
+        photos,
+        currentLastPhotoId,
+        hasNext,
+        scrollTop,
+        initialized,
+        currentCategoryId,
+        setFeed,
+        resetForCategory,
+    } = usePhotoFeedStore((state) => state);
 
     const containerRef = useRef(null);
 
-    // 사진 클릭 시 스크롤 저장
-    const handlePhotoClick = () => {
-        sessionStorage.setItem("home-scroll", String(window.scrollY));
-    };
+    const [loading, setLoading] = useState(false);
+    const loadingRef = useRef(loading);
+    const hasNextRef = useRef(hasNext);
 
-    /**
-     * @param {boolean} isInitialLoad - true면 photos 배열을 새로 덮어쓰고, false면 기존 배열에 추가(append)한다.
-     * @param {number|null} cursorId - 다음 페이지를 가져올 커서 ID (lastPhotoId). isInitialLoad가 true면 null로 무시한다.
-     */
+    useEffect(() => {
+        loadingRef.current = loading;
+    }, [loading]);
+
+    useEffect(() => {
+        hasNextRef.current = hasNext;
+    }, [hasNext]);
+
+    const pageSize = 30;
+
+    // 🔥 카테고리가 바뀌면 zustand 피드를 싹 리셋
+    useEffect(() => {
+        if (currentCategoryId !== categoryKey) {
+            resetForCategory(categoryKey);
+        }
+    }, [categoryKey, currentCategoryId, resetForCategory]);
+
+    // 사진 로딩 함수
     const loadPhotos = useCallback(
-        async (isInitialLoad, cursorId) => {
-            // isInitialLoad가 false(스크롤 로드)일 때만 Ref의 최신 상태를 검사한다.
-            if (!isInitialLoad && (loadingRef.current || !hasNextRef.current))
+        async (isInitial) => {
+            if (!isInitial && (loadingRef.current || !hasNextRef.current)) {
                 return;
+            }
 
             setLoading(true);
 
             try {
-                // 초기 로드 시에는 cursorId를 null로 설정하여 첫 페이지를 요청합니다.
-                const lastPhotoIdToSend = isInitialLoad ? null : cursorId;
-
                 const params = {
-                    pageSize: pageSize,
+                    pageSize,
                 };
 
-                // 1. lastPhotoId 설정 (초기 로드 시에는 null)
-                if (lastPhotoIdToSend) {
-                    params.lastPhotoId = lastPhotoIdToSend;
+                const cursorId = isInitial ? null : currentLastPhotoId;
+                if (cursorId) {
+                    params.lastPhotoId = cursorId;
                 }
 
-                // 2. categoryId 설정
-                if (categoryId !== "all" && categoryId !== null) {
-                    params.categoryId = categoryId;
+                if (categoryKey !== "all" && categoryKey !== null) {
+                    params.categoryId = categoryKey;
                 }
 
                 const response = await axios.get(
@@ -71,60 +78,70 @@ const Scroll = ({ categoryId }) => {
                     hasNext: newHasNext,
                 } = response.data;
 
-                // 데이터 설정: 초기 로드(덮어쓰기) 또는 추가 로드(append)
-                if (isInitialLoad) {
-                    setPhotos(receivedPhotos);
-                } else {
-                    setPhotos((prev) => [...prev, ...receivedPhotos]);
-                }
-
-                setCurrentLastPhotoId(nextCursorId);
-                setHasNext(newHasNext);
+                setFeed((prev) => ({
+                    ...prev,
+                    photos: isInitial
+                        ? receivedPhotos
+                        : [...prev.photos, ...receivedPhotos],
+                    currentLastPhotoId: nextCursorId,
+                    hasNext: newHasNext,
+                    initialized: true,
+                }));
             } catch (error) {
                 console.error("사진 목록 조회 실패:", error);
-                setHasNext(false);
+                setFeed({ hasNext: false });
             } finally {
                 setLoading(false);
             }
         },
-        // loadPhotos는 이제 categoryId와 pageSize에만 의존한다.
-        // 상태 값(loading, hasNext)은 Ref를 통해 접근하여 함수 인스턴스 변경을 최소화한다.
-        [pageSize, categoryId]
+        [categoryKey, currentLastPhotoId, pageSize, setFeed]
     );
 
-    // 1. 카테고리 변경 감지 (초기 로드)
+    // 처음 마운트되었거나, 카테고리 리셋 후 아직 초기화 안 되었으면 첫 페이지 로딩
     useEffect(() => {
-        // 무한 루프가 발생하지 않도록 초기 로드 시에도 loading 상태 확인을 추가한다.
-        // 하지만 Ref를 사용했으므로, 이미 로딩 중인 상태가 아니라면 무조건 실행된다.
+        if (!initialized) {
+            loadPhotos(true);
+        }
+    }, [initialized, loadPhotos]);
 
-        setPhotos([]); // 이전 사진 목록 즉시 비우기
-        setCurrentLastPhotoId(null);
-        setHasNext(true);
-
-        // isInitialLoad: true, cursorId: null (무시됨)
-        loadPhotos(true, null);
-    }, [categoryId, loadPhotos]);
-
-    // 2. 무한 스크롤 이벤트 처리 (추가 로드)
+    // 무한 스크롤 (여기서는 scrollTop 저장 안 함)
     useEffect(() => {
         const container = containerRef.current;
         if (!container) return;
 
         const handleScroll = () => {
-            // 스크롤 이벤트에서는 로컬 상태(loading, hasNext)를 참조
-            if (loading || !hasNext) return;
+            if (loadingRef.current || !hasNextRef.current) return;
 
             const { scrollTop, clientHeight, scrollHeight } = container;
 
             if (scrollHeight - scrollTop - clientHeight < 300) {
-                // isInitialLoad: false, cursorId: currentLastPhotoId (상태 관리된 커서)
-                loadPhotos(false, currentLastPhotoId);
+                loadPhotos(false);
             }
         };
 
         container.addEventListener("scroll", handleScroll);
         return () => container.removeEventListener("scroll", handleScroll);
-    }, [loading, hasNext, loadPhotos, currentLastPhotoId]);
+    }, [loadPhotos]);
+
+    // 🔥 사진 렌더된 후, zustand에 저장된 scrollTop으로 복원
+    useEffect(() => {
+        const container = containerRef.current;
+        if (!container) return;
+
+        if (initialized && photos.length > 0) {
+            requestAnimationFrame(() => {
+                container.scrollTop = scrollTop || 0;
+            });
+        }
+    }, [initialized, photos, scrollTop]);
+
+    // 🔥 사진 클릭 시, 현재 스크롤 위치를 전역 스토어에 저장
+    const handlePhotoClick = () => {
+        const container = containerRef.current;
+        if (container) {
+            setFeed({ scrollTop: container.scrollTop });
+        }
+    };
 
     const breakpointColumnsObj = {
         default: 5,
@@ -147,7 +164,6 @@ const Scroll = ({ categoryId }) => {
                         onClick={handlePhotoClick}
                     >
                         <img
-                            key={photo.photoId}
                             src={photo.bucketFileUrl}
                             alt={photo.fileName}
                             style={{

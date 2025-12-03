@@ -1,3 +1,8 @@
+.Scroll {
+    height: calc(100vh - 80px); /* 헤더 높이만큼 빼기 같은 느낌 */
+    overflow-y: auto;
+}
+
 .Scroll .masonry-grid {
     display: flex;
     margin-left: -10px; /* 칼럼 간 간격 보정용 */

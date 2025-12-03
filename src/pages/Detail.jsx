@@ -159,20 +159,7 @@ const Detail = () => {
             <div className="detail-body">
                 <button
                     className="back-button"
-                    onClick={() => {
-                        const saved = sessionStorage.getItem("home-scroll");
-                        nav(-1);
-
-                        // 뒤로가기 실행 후 잠깐 뒤에 직접 복원
-                        requestAnimationFrame(() => {
-                            requestAnimationFrame(() => {
-                                if (saved !== null) {
-                                    const y = Number(saved);
-                                    window.scrollTo(0, y);
-                                }
-                            });
-                        });
-                    }}
+                    onClick={() => nav(-1)}
                     aria-label="뒤로가기"
                 >
                     <img src={leftArrow} alt="뒤로가기" />
