@@ -10,9 +10,8 @@ const Scroll = ({ categoryId }) => {
     const [loading, setLoading] = useState(false);
     const [currentLastPhotoId, setCurrentLastPhotoId] = useState(null);
     const [hasNext, setHasNext] = useState(true);
-    const containerRef = useRef(null);
 
-    // ✨ 무한 요청 방지를 위해 loading과 hasNext를 Ref로 관리
+    // 무한 요청 방지를 위해 loading과 hasNext를 Ref로 관리
     const loadingRef = useRef(loading);
     const hasNextRef = useRef(hasNext);
 
@@ -23,6 +22,13 @@ const Scroll = ({ categoryId }) => {
     }, [loading, hasNext]);
 
     const pageSize = 30;
+
+    const containerRef = useRef(null);
+
+    // 사진 클릭 시 스크롤 저장
+    const handlePhotoClick = () => {
+        sessionStorage.setItem("home-scroll", String(window.scrollY));
+    };
 
     /**
      * @param {boolean} isInitialLoad - true면 photos 배열을 새로 덮어쓰고, false면 기존 배열에 추가(append)한다.
@@ -135,7 +141,11 @@ const Scroll = ({ categoryId }) => {
                 columnClassName="masonry-grid-column"
             >
                 {photos.map((photo) => (
-                    <Link key={photo.photoId} to={`/detail/${photo.photoId}`}>
+                    <Link
+                        key={photo.photoId}
+                        to={`/detail/${photo.photoId}`}
+                        onClick={handlePhotoClick}
+                    >
                         <img
                             key={photo.photoId}
                             src={photo.bucketFileUrl}
