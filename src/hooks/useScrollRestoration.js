@@ -8,12 +8,20 @@ const useScrollRestoration = (storageKey = "scroll-position") => {
         const y = Number(saved);
         if (Number.isNaN(y)) return;
 
-        // 홈 레이아웃이 모두 그려진 직후에 실행
-        requestAnimationFrame(() => {
-            requestAnimationFrame(() => {
-                window.scrollTo(0, y);
-            });
-        });
+        // Masonry 재정렬이 끝날 때까지 반복해서 scrollTo 실행
+        let frame = 0;
+
+        const restore = () => {
+            frame++;
+            window.scrollTo(0, y);
+
+            // 10프레임 동안 scrollTo 반복 → Masonry layout shift도 전부 이김
+            if (frame < 10) {
+                requestAnimationFrame(restore);
+            }
+        };
+
+        requestAnimationFrame(restore);
     }, [storageKey]);
 };
 
