@@ -6,6 +6,11 @@
     margin: 0 260px;
 }
 
+.Home .body-container .about-button {
+    border-radius: 50%;
+    border: none;
+}
+
 @media screen and (max-width: 1500px) {
     .Home .body-container {
         margin: 0 180px;

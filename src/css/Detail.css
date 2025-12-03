@@ -211,10 +211,13 @@
     padding: 16px 40px;
 }
 
-.detail-container.landscape .detail-label,
-.detail-container.landscape .detail-value {
-    width: 80px;
-    text-align: center;
+/* Landscape 모드에서 모든 detail-item의 텍스트 줄바꿈 방지 */
+.detail-container.landscape .photo-details .detail-item .detail-label,
+.detail-container.landscape .photo-details .detail-item .detail-value {
+    white-space: nowrap;
+    width: auto !important;
+    min-width: fit-content; /* flexbox에서 줄바꿈 방지 */
+    overflow: hidden;
 }
 
 @media (max-width: 1100px) {

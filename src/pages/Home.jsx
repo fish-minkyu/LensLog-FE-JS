@@ -17,6 +17,9 @@ const Home = () => {
             <div className="body-container">
                 <Category onCategoryChange={setSelectedCategoryId} />
                 <Scroll categoryId={selectedCategoryId} />
+                <button className="about-button">
+                    <img src="" alt="about-button" />
+                </button>
             </div>
         </div>
     );
