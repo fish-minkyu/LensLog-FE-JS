@@ -11,8 +11,8 @@ const Upload = () => {
     const [location, setLocation] = useState("");
     const [categoryId, setCategoryId] = useState("");
     const [newCategory, setNewCategory] = useState("");
-    const [editCategory, setEditCategory] = useState("");
-    const [deleteCategory, setDeleteCategory] = useState("");
+    const [editCategoryId, setEditCategoryId] = useState("");
+    const [deleteCategoryId, setDeleteCategoryId] = useState("");
 
     const [categoryList, setCategoryList] = useState([]);
 
@@ -114,7 +114,7 @@ const Upload = () => {
     // 카테고리 수정
     const onUpdateCategory = async () => {
         try {
-            if (!editCategory) {
+            if (!editCategoryId) {
                 alert("수정할 카테고리를 선택해주세요.");
                 return;
             }
@@ -125,12 +125,12 @@ const Upload = () => {
             }
 
             const response = await axios.put(
-                API_ENDPOINTS.CATEGORY.UPDATE_CATEGORY(editCategory.categoryId)
+                API_ENDPOINTS.CATEGORY.UPDATE_CATEGORY(editCategoryId)
             );
 
             if (response.status === 200) {
                 alert("카테고리 수정 완료");
-                setEditCategory("");
+                setEditCategoryId("");
                 await getCategoryList();
             }
         } catch (error) {
@@ -142,7 +142,7 @@ const Upload = () => {
     // 카테고리 삭제
     const onDeleteCategory = async () => {
         try {
-            if (!deleteCategory) {
+            if (!deleteCategoryId) {
                 alert("삭제할 카테고리를 선택해주세요.");
                 return;
             }
@@ -153,14 +153,12 @@ const Upload = () => {
             }
 
             const response = await axios.delete(
-                API_ENDPOINTS.CATEGORY.DELETE_CATEGORY(
-                    deleteCategory.categoryId
-                )
+                API_ENDPOINTS.CATEGORY.DELETE_CATEGORY(deleteCategoryId)
             );
 
             if (response.status === 200) {
                 alert("카테고리 삭제 완료");
-                setDeleteCategory("");
+                setDeleteCategoryId("");
                 await getCategoryList();
             }
         } catch (error) {
@@ -260,9 +258,9 @@ const Upload = () => {
                     <div>
                         <h4 className="title">카테고리 수정</h4>
                         <select
-                            value={editCategory}
+                            value={editCategoryId}
                             onChange={(e) => {
-                                setEditCategory(e.target.value);
+                                setEditCategoryId(e.target.value);
                             }}
                         >
                             <option value="">선택하세요.</option>
@@ -280,8 +278,10 @@ const Upload = () => {
                     <div>
                         <h4 className="title">카테고리 삭제</h4>
                         <select
-                            value={deleteCategory}
-                            onChange={(e) => setDeleteCategory(e.target.value)}
+                            value={deleteCategoryId}
+                            onChange={(e) =>
+                                setDeleteCategoryId(e.target.value)
+                            }
                         >
                             <option value="">선택하세요.</option>
                             {categoryList.map((cat) => (
