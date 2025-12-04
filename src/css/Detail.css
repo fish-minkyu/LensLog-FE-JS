@@ -154,10 +154,12 @@
     align-self: flex-end;
 }
 
-.detail-container.portrait .detail-item:first-child .detail-value {
+/* portrait 모드에서 모든 label/value에 줄바꿈 방지 */
+.detail-container.portrait .photo-details .detail-item .detail-label,
+.detail-container.portrait .photo-details .detail-item .detail-value {
     white-space: nowrap;
     overflow: hidden;
-    text-overflow: ellipsis;
+    text-overflow: ellipsis; /* 너무 길면 ... 처리 */
 }
 
 .download-button.portrait {

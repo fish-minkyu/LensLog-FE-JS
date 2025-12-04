@@ -110,10 +110,17 @@
         max-height: 32px;
     }
 
-    /* 모바일에서 글자 크기 조절 */
+    /* 모바일에서 줄바꿈 방지 */
+    .auth-links {
+        white-space: nowrap !important;
+        flex-wrap: nowrap !important;
+        overflow-x: auto; /* 공간 부족 시 스크롤 허용(선택) */
+    }
+
+    .auth-links .welcome-message,
     .auth-links .auth-link,
-    .auth-links .auth-separator,
-    .auth-links .welcome-message {
+    .auth-links .auth-separator {
+        white-space: nowrap !important; /* 내부 항목도 줄바꿈 방지 */
         font-size: 14px; /* 글자를 조금 작게 */
     }
 }
