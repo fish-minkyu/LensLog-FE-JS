@@ -280,7 +280,9 @@ const FindPasswordPage = () => {
                 {isVerifiedRequested && (
                     <div className="verification-message">
                         <span className="success-text">
-                            인증번호를 발송했습니다. 메일을 확인해주세요.
+                            인증번호를 발송했습니다.
+                            <br />
+                            메일을 확인해주세요.
                         </span>
                         <span className="timer-text">
                             {formatTime(timeLeft)}
