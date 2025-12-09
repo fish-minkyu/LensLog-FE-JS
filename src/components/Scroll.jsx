@@ -164,7 +164,7 @@ const Scroll = ({ categoryId }) => {
                         onClick={handlePhotoClick}
                     >
                         <img
-                            src={photo.bucketFileUrl}
+                            src={photo.thumbnailUrl}
                             alt={photo.fileName}
                             style={{
                                 width: "100%",
