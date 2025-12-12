@@ -35,7 +35,7 @@ const Scroll = ({ categoryId }) => {
         hasNextRef.current = hasNext;
     }, [hasNext]);
 
-    const pageSize = 50;
+    const pageSize = 100;
 
     // 🔥 카테고리가 바뀌면 zustand 피드를 싹 리셋
     useEffect(() => {
