@@ -1,16 +1,57 @@
-# React + Vite
+## LensLog - FE
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+### 스팩
 
-Currently, two official plugins are available:
+<img src="https://img.shields.io/badge/JavaScript-F7DF1E?style=flat-square&logo=javascript&logoColor=white"/>
+<img src="https://img.shields.io/badge/HTML-E34F26?style=flat-square&logo=html5&logoColor=white"/>
+<img src="https://img.shields.io/badge/CSS-1572B6?style=flat-square&logo=css&logoColor=white"/>
+<img src="https://img.shields.io/badge/React-61DAFB?style=flat-square&logo=react&logoColor=white"/>
+<img src="https://img.shields.io/badge/Vite-646CFF?style=flat-square&logo=vite&logoColor=white"/>
+<img src="https://img.shields.io/badge/React Router-CA4245?style=flat-square&logo=reactrouter&logoColor=white"/>
+<img src="https://img.shields.io/badge/React Hook Form-EC5990?style=flat-square&logo=reacthookform&logoColor=white"/>
+<img src="https://img.shields.io/badge/Axios-5A29E4?style=flat-square&logo=axios&logoColor=white"/>
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+### 구현 기능
 
-## React Compiler
+- 메인 화면
+![매안 화면](./readme/메인화면.png)
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+- 상세 페이지 화면(세로 버전, 가로 버전)
+    - 상세 페이지 세로
+    ![상세 페이지 세로](./readme/상세페이지-세로.png)
 
-## Expanding the ESLint configuration
+    - 상세 페이지 가로
+    ![상세 페이지 가로](./readme/상세페이지-가로.png)
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+- 회원가입 화면
+![매안 화면](./readme/메인화면.png)
+
+- 회원가입 완료 화면
+![매안 화면](./readme/회원가입완료화면.png)
+
+- 로그인 화면
+![매안 화면](./readme/로그인.png)
+
+- 아이디 찾기 화면
+![매안 화면](./readme/아이디찾기.png)
+
+- 아이디 찾기 결과 화면
+![매안 화면](./readme/아이디찾기결과화면.png)
+
+- 비밀번호 찾기 화면
+![매안 화면](./readme/비밀번호찾기.png)
+
+- 비밀번호 변경 화면
+![매안 화면](./readme/비밀번호변경.png)
+
+- 비밀번호 변경완료 화면
+![매안 화면](./readme/비밀번호.png)
+
+- 이미지 업로드 화면(관리자용)
+![매안 화면](./readme/이미지업로드.png)
+
+- 로그인 안내 모달 화면
+![매안 화면](./readme/로그인안내모달.png)
+
+- 로그아웃 안내 모달 화면
+![매안 화면](./readme/로그아웃안내모달.png)
